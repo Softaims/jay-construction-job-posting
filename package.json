@@ -9,6 +9,7 @@
     "dev": "nodemon server.js"
   },
   "dependencies": {
+    "@sendgrid/mail": "^8.1.5",
     "bcrypt": "^5.1.1",
     "compression": "^1.8.0",
     "cookie-parser": "^1.4.7",

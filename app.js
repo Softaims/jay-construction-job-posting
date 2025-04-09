@@ -12,7 +12,7 @@ import connectDB from "./utils/dbConnection.js";
 import userAuthRoutes from "./features/Authentication/routes.js"
 
 configDotenv();
-// connectDB();
+connectDB();
 
 export const app = express();
 
@@ -30,7 +30,7 @@ app.use(compression());
 app.use(morgan(process.env.NODE_ENV === "production" ? "combined" : "dev")); 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 3,
+  max: 100,
   message: "Too many requests from this IP, please try again later.",
   standardHeaders: true,
   legacyHeaders: false, 
