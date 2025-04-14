@@ -1,9 +1,17 @@
 import { jobPostDto } from "./dtos/jobPostDto.js";
 import { createAJob, fetchJobs } from "./services.js";
+import { getUserById } from "../services.js";
 
 export const createJobPost = async (req, res) => {
   try {
     const userId=req.user
+    const user=await getUserById(userId)
+    if(!user.admin_verified){
+      return res.status(403).json({
+        success: false,
+        message: "Forbidden: You cannot post a job until admin approval.",
+      });
+    }
    const newJob=await createAJob({...req.body,created_by:userId})
 
     return res.status(201).json({

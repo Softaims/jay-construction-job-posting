@@ -1,9 +1,9 @@
 import {
-  getUserByEmail,
   createUserByRole,
   updateUserEmailVerificationStatus,
   createBlacklistedToken,
 } from "./services.js";
+import { getUserByEmail } from "../services.js";
 import bcrypt from "bcrypt";
 import { sendMail } from "../../utils/email.utils.js";
 import { userDto } from "./dtos/userDto.js";

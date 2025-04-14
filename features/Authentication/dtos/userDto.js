@@ -13,6 +13,7 @@ export const userDto = (user) => {
       ...base,
       company_name: user.company_name,
       company_number: user.company_number,
+      admin_verified:user.admin_verified
     };
   }
 
@@ -22,6 +23,7 @@ export const userDto = (user) => {
       company_name: user.company_name,
       company_number: user.company_number,
       services_offered: user.services_offered,
+      admin_verified:user.admin_verified
     };
   }
 

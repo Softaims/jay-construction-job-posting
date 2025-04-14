@@ -18,9 +18,6 @@ export const createUserByRole = async (role, userData) => {
   return await newUser.save();
 };
 
-export const getUserByEmail = async (email) => {
-  return await User.findOne({ email });
-};
 
 export const updateUserEmailVerificationStatus = async (userId) => {
   return User.findByIdAndUpdate(

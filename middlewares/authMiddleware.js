@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken"
-
-export const authMiddleware = (req, res, next) => {
+import { isTokenBlacklisted } from "../features/services.js";
+export const authMiddleware = async(req, res, next) => {
   const token = req.cookies.access_token;
 
   if (!token) {
@@ -12,6 +12,13 @@ export const authMiddleware = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const blacklisted = await isTokenBlacklisted(token);
+    if (blacklisted) {
+      return res.status(401).json({
+        message: "Unauthorized: Invalid or expired token.",
+      });
+    }
+
     req.user = {
       _id: decoded.userId,
       email: decoded.email,
