@@ -34,11 +34,7 @@ export const updateUserEmailVerificationStatus = async (userId) => {
   );
 };
 
-export const createBlacklistedToken = async (token) => {
-  try {
-    const newToken = new BlacklistedToken({ token });
+export const createBlacklistedToken = async (token,expiresAt) => {
+    const newToken = new BlacklistedToken({ token,expiresAt });
     return await newToken.save();
-  } catch (error) {
-    throw new Error("Error creating a blacklisted token");
-  }
 };

@@ -255,7 +255,7 @@ export const loginUser = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "Internal server error during login.",
-      error: error.message,
+      error: Array.isArray(error.message) ? error.message : [error.message],
     });
   }
 };
@@ -305,7 +305,7 @@ export const forgotPassword = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "Internal server error during password reset request.",
-      error: error.message,
+      error: Array.isArray(error.message) ? error.message : [error.message],
     });
   }
 };
@@ -353,7 +353,7 @@ export const resetPassword = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "Internal server error during password reset.",
-      error: error.message,
+      error: Array.isArray(error.message) ? error.message : [error.message],
     });
   }
 };
@@ -364,12 +364,19 @@ export const logoutUser = async (req, res) => {
     if (token) {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
       const expiresAt = new Date(decoded.exp * 1000);
-      await createBlacklistedToken(decoded,expiresAt)
+      await createBlacklistedToken(token,expiresAt)
     }
     res.clearCookie("access_token");
     return res.status(200).json({
       success: true,
       message: "Logout successful.",
     });
-  } catch (error) {}
+  } catch (error) {
+    console.error("Logout error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error during logout.",
+      error: Array.isArray(error.message) ? error.message : [error.message],
+    });
+  }
 };

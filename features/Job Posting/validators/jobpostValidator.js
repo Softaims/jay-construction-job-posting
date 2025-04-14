@@ -38,7 +38,4 @@ export const jobPostValidator = z.object({
 
   job_priority: z.boolean().optional(),
   budget: z.number().optional(),
-  created_by: z.string({
-    required_error: "created_by is required",
-  }),
 });

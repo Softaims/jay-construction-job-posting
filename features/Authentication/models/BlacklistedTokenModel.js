@@ -5,7 +5,7 @@ const BlacklistedTokenSchema = new mongoose.Schema({
   expiresAt: {
     type: Date,
     required: true,
-    index: { expires: 0 }, // TTL index activates here
+    index: { expires: 0 }, 
   },
 });
 
