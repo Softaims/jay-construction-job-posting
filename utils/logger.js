@@ -18,7 +18,7 @@ if (!fs.existsSync(logFile)) {
 }
 
 // Create a logger instance
-const logger = winston.createLogger({
+export const logger = winston.createLogger({
   level: logLevel,
   format: winston.format.combine(
     winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
@@ -47,4 +47,3 @@ const logger = winston.createLogger({
   ],
 });
 
-module.exports = logger;

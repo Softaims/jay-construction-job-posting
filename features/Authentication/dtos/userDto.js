@@ -1,8 +1,11 @@
+
+
 export const userDto = (user) => {
   const base = {
     id: user._id,
     email: user.email,
     role: user.role,
+    verifyEmail:user.verifyEmail
   };
 
   if (user.role === "main_contractor") {

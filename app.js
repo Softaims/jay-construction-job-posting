@@ -10,6 +10,7 @@ import swaggerUi from "swagger-ui-express";
 import { swaggerOptions } from "./utils/swagger.config.js";
 import connectDB from "./utils/dbConnection.js";
 import userAuthRoutes from "./features/Authentication/routes.js"
+import JobPostRoutes from "./features/Job Posting/routes.js"
 
 configDotenv();
 connectDB();
@@ -63,3 +64,5 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/v0", userAuthRoutes);
+app.use("/api/v0", JobPostRoutes);
+

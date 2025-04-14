@@ -2,7 +2,7 @@ import { MainContractor } from "./models/MainContractorModel.js";
 import { Subcontractor } from "./models/SubContractorModel.js";
 import { JobSeeker } from "./models/JobSeekerModel.js";
 import { User } from "./models/UserModel.js";
-
+import { BlacklistedToken } from "./models/BlacklistedTokenModel.js";
 export const createUserByRole = async (role, userData) => {
   let newUser;
   if (role === "main_contractor") {
@@ -32,4 +32,13 @@ export const updateUserEmailVerificationStatus = async (userId) => {
     },
     { new: true }
   );
+};
+
+export const createBlacklistedToken = async (token) => {
+  try {
+    const newToken = new BlacklistedToken({ token });
+    return await newToken.save();
+  } catch (error) {
+    throw new Error("Error creating a blacklisted token");
+  }
 };

@@ -1,25 +1,29 @@
-import jwt from "jsonwebtoken";
-export const verifyAuthToken = (req, res, next) => {
-  const token = req.headers["authorization"]?.split(" ")[1];
-  if (!token) {
-    return res.status(403).send({ message: "No token provided.", isTokenValid: false });
-  }
-  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-    if (err) {
-      if (err.name === "TokenExpiredError") {
-        return res.status(401).send({ message: "Token has expired", isTokenValid: false });
-      }
-      return res.status(401).send({ message: "Unauthorized!", isTokenValid: false });
-    }
-    req.user = {
-      _id: decoded._id,
-      name: decoded.name,
-      email: decoded.email,
-      activeStatus: decoded.activeStatus,
-      chats: decoded.chats,
-      lastSeen: decoded.lastSeen,
-    };
+import jwt from "jsonwebtoken"
 
+export const authMiddleware = (req, res, next) => {
+  const token = req.cookies.access_token;
+
+  if (!token) {
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized: User is not logged in. Please log in to access this resource.",
+    });
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = {
+      _id: decoded.userId,
+      email: decoded.email,
+      role:decoded.role
+    };
+console.log("decoded is",decoded)
     next();
-  });
+  } catch (error) {
+    console.error("JWT verification error:", error);
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized: Invalid or expired token.",
+    });
+  }
 };
