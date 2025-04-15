@@ -11,6 +11,7 @@ import { swaggerOptions } from "./utils/swagger.config.js";
 import connectDB from "./utils/dbConnection.js";
 import userAuthRoutes from "./features/Authentication/routes.js"
 import JobPostRoutes from "./features/Job Posting/routes.js"
+import DocumentVerificationRoutes from "./features/Document Verification/routes.js"
 import { errorHandler } from "./middlewares/errorHandler.js";
 
 configDotenv();
@@ -66,6 +67,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/v0", userAuthRoutes);
 app.use("/api/v0", JobPostRoutes);
+app.use("/api/v0", DocumentVerificationRoutes);
 
 app.use(errorHandler)
 
