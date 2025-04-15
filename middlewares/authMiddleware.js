@@ -24,7 +24,6 @@ export const authMiddleware = async(req, res, next) => {
       email: decoded.email,
       role:decoded.role
     };
-console.log("decoded is",decoded)
     next();
   } catch (error) {
     console.error("JWT verification error:", error);

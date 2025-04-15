@@ -35,3 +35,17 @@ export const createBlacklistedToken = async (token,expiresAt) => {
     const newToken = new BlacklistedToken({ token,expiresAt });
     return await newToken.save();
 };
+
+
+export const updateAdminStatusToPending = async (userId,role,compliance_certificate,verification_certificate) => {
+  const roleModelMap = {
+    main_contractor: MainContractor,
+    subcontractor: Subcontractor,
+  };
+  const Model = roleModelMap[role];
+  return await Model.findByIdAndUpdate(
+    userId,
+    { admin_status: "pending", compliance_certificate, verification_certificate },
+    { new: true }
+  );
+};

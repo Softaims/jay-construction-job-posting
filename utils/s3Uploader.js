@@ -13,6 +13,7 @@ const s3 = new S3Client({
 
 export const s3Uploader = async (file) => {
   try {
+    console.log("s3 file is",file.originalname)
     const fileExtension = path.extname(file.originalname);
     const fileName = `${uuidv4()}${fileExtension}`;
 

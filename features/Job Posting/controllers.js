@@ -7,7 +7,7 @@ import createError from "http-errors"
 export const createJobPost =catchAsync(async (req, res) => {
     const userId=req.user
     const user=await getUserById(userId)
-    if(!user.admin_verified){
+    if(user.admin_status!="verified"){
       return next(createError(403,"Forbidden: You cannot post a job until admin approval."))
     }
    const newJob=await createAJob({...req.body,created_by:userId})
