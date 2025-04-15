@@ -1,8 +1,8 @@
-import { MainContractor } from "./models/MainContractorModel.js";
-import { Subcontractor } from "./models/SubContractorModel.js";
-import { JobSeeker } from "./models/JobSeekerModel.js";
-import { User } from "./models/UserModel.js";
-import { BlacklistedToken } from "./models/BlacklistedTokenModel.js";
+import { MainContractor } from "../../shared/models/MainContractorModel.js";
+import { Subcontractor } from "../../shared/models/SubContractorModel.js";
+import { JobSeeker } from "../../shared/models/JobSeekerModel.js";
+import { User } from "../../shared/models/UserModel.js";
+import { BlacklistedToken } from "../../shared/models/BlacklistedTokenModel.js";
 export const createUserByRole = async (role, userData) => {
   let newUser;
   if (role === "main_contractor") {

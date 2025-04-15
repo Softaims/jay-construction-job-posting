@@ -1,6 +1,6 @@
 
-import { User } from "./Authentication/models/UserModel.js";
-import { BlacklistedToken } from "./Authentication/models/BlacklistedTokenModel.js";
+import { User } from "../models/UserModel.js";
+import { BlacklistedToken } from "../models/BlacklistedTokenModel.js";
 export const getUserByEmail = async (email) => {
   return await User.findOne({ email });
 };

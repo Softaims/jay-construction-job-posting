@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken"
-import { isTokenBlacklisted } from "../features/services.js";
+import { isTokenBlacklisted } from "../shared/services/services.js";
 export const authMiddleware = async(req, res, next) => {
   const token = req.cookies.access_token;
 
