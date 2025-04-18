@@ -1,5 +1,6 @@
 
 import {
+  updateAdminStatusDocumentVerification,
     updateAdminStatusToPending,
   } from "./services.js";
   import { getUserById } from "../../shared/services/services.js";
@@ -38,3 +39,21 @@ export const submitContractorDocuments = catchAsync(async (req, res, next) => {
       message: "Documents has been submitted for admin approval",
     });
   });
+
+  export const verifyContractorDocuments = catchAsync(async (req, res, next) => {
+    const { id, admin_status } = req.body;
+     const targetUser=await getUserById(id)
+        if (!targetUser) {
+          return next(createError(404, `User did not exist`));
+        }
+        if (targetUser.role!="main_contractor" || targetUser.role!="subcontractor") {
+          return next(createError(404, `Only main_contractors and subcontractors documents can be ${admin_status}`));
+        }
+    await updateAdminStatusDocumentVerification(id, targetUser.role, admin_status);
+  
+    return res.status(200).json({
+      success: true,
+      message: `Documents have been ${admin_status}.`,
+    });
+  });
+  
