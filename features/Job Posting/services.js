@@ -5,17 +5,50 @@ export const createAJob = async (jobData) => {
   return await newJob.save();
 };
 
-export const fetchJobs = async (allowedTargetUsers, page = 1, limit = 10) => {
+
+
+export const fetchJobs = async (
+  allowedTargetUsers,
+  page ,
+  limit ,
+  latitude,
+  longitude,
+  distanceInKm
+) => {
   const skip = (page - 1) * limit;
-  const jobs = await Job.find({ target_user: { $in: allowedTargetUsers } })
+
+  const query = {
+    target_user: { $in: allowedTargetUsers },
+  };
+
+  if (latitude && longitude && distanceInKm) {
+    const distanceInMiles = distanceInKm/1.609;
+
+    query.job_location = {
+      $geoWithin: {
+        $centerSphere: [
+          [parseFloat(longitude), parseFloat(latitude)],
+          distanceInMiles / 3963.2, 
+        ],
+      },
+    };
+  
+
+    console.log("query is",query)
+  }
+
+  // Fetch paginated jobs
+  const jobs = await Job.find(query)
     .skip(skip)
     .limit(limit)
-    .populate("created_by","company_name company_number email role"); 
+    .populate("created_by", "company_name company_number email role");
 
-  const total = await Job.countDocuments({ target_user: { $in: allowedTargetUsers } });
+  // Count total (based on the same query)
+  const total = await Job.countDocuments(query);
 
   return { jobs, total };
 };
+
 
 
 export const fetchJobById = async (id) => {

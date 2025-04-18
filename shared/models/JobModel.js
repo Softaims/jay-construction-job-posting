@@ -4,7 +4,7 @@ const JobSchema = new mongoose.Schema(
   {
     project_image: {
       type: String,
-      default: null, 
+      default: null,
     },
 
     job_title: {
@@ -13,12 +13,14 @@ const JobSchema = new mongoose.Schema(
     },
 
     job_location: {
-      latitude: {
-        type: Number,
+      type: {
+        type: String,
+        enum: ['Point'],
         required: true,
+        default: 'Point',
       },
-      longitude: {
-        type: Number,
+      coordinates: {
+        type: [Number], // [longitude, latitude]
         required: true,
       },
     },
@@ -29,11 +31,10 @@ const JobSchema = new mongoose.Schema(
     },
 
     target_user: {
-        type: String,
-        required: true,
-        enum: ["job_seeker", "subcontractor", "both"], 
-      },
-      
+      type: String,
+      required: true,
+      enum: ["job_seeker", "subcontractor", "both"],
+    },
 
     services: [
       {
@@ -65,8 +66,10 @@ const JobSchema = new mongoose.Schema(
     },
   },
   {
-    timestamps: true, 
+    timestamps: true,
   }
 );
+
+JobSchema.index({ job_location: "2dsphere" });
 
 export const Job = mongoose.model("Job", JobSchema);

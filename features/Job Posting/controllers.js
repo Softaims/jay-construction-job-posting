@@ -20,35 +20,47 @@ export const createJobPost =catchAsync(async (req, res) => {
 });
 
 
-export const getAllJobs =catchAsync(async (req, res) => {
+export const getAllJobs = catchAsync(async (req, res, next) => {
+  const { role } = req.user;
+  let allowedTargetUsers = [];
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+  const { latitude, longitude, distanceInKm } = req.query; 
 
-    const { role } = req.user;
-    let allowedTargetUsers = [];
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
+  if (role === "job_seeker") {
+    allowedTargetUsers = ["job_seeker", "both"];
+  } else if (role === "subcontractor") {
+    allowedTargetUsers = ["subcontractor", "both"];
+  } else if (role === "main_contractor" || role === "admin") {
+    allowedTargetUsers = ["job_seeker", "subcontractor", "both"];
+  } else {
+    return next(createError(403, "You are not authorized to view jobs"));
+  }
 
-    if (role === 'job_seeker') {
-      allowedTargetUsers = ['job_seeker', 'both'];
-    } else if (role === 'subcontractor') {
-      allowedTargetUsers = ['subcontractor', 'both'];
-    } else if (role === 'main_contractor' || role === 'admin') {
-      allowedTargetUsers = ['job_seeker', 'subcontractor', 'both'];
-    } else {
-      return next(createError(403,"You are not authorized to view jobs"))
-    }
+console.log("calling fetch job")
+  const { jobs, total } = await fetchJobs(
+    allowedTargetUsers,
+    page,
+    limit,
+    latitude,
+    longitude,
+    distanceInKm
+  );
 
-    const { jobs, total } = await fetchJobs(allowedTargetUsers, page, limit);
-
-    return res.status(200).json({
-      message: "Jobs fetched successfully",
-      data:{
-        jobs:jobs,
-        pagination:{
-          total,page,limit,totalPages:Math.ceil(total/limit)
-        }
-      }
-    });
+  return res.status(200).json({
+    message: "Jobs fetched successfully",
+    data: {
+      jobs: jobs,
+      pagination: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+      },
+    },
+  });
 });
+
 
 
 export const getJobById =catchAsync( async (req, res,next) => {

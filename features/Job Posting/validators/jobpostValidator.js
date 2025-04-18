@@ -8,12 +8,24 @@ export const jobPostValidator = z.object({
   }),
 
   job_location: z.object({
-    latitude: z.number({
-      required_error: "Latitude is required",
-    }),
-    longitude: z.number({
-      required_error: "Longitude is required",
-    }),
+    type: z
+    .literal("Point")
+    .optional(),
+    coordinates: z
+      .tuple([
+        z.number({
+          required_error: "Longitude is required",
+        }),
+        z.number({
+          required_error: "Latitude is required",
+        }),
+      ])
+      .refine(
+        ([lng, lat]) => lng >= -180 && lng <= 180 && lat >= -90 && lat <= 90,
+        {
+          message: "Coordinates must be valid longitude [-180,180] and latitude [-90,90]",
+        }
+      ),
   }, {
     required_error: "Job location is required",
   }),
