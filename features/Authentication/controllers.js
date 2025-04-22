@@ -28,22 +28,23 @@ export const createUser = catchAsync(async (req, res, next) => {
     verificationTokenExpiry,
   };
 
+  if (req.body.role == "job_seeker" || req.body.role == "subcontractor") {
+    userData.travel_radius_km = Number(userData.travel_radius_km);
+  }
   if (req.body.role == "job_seeker") {
     const qualification_document = req.files.qualification_document?.[0] || null;
     const id_document = req.files.id_document?.[0] || null;
     const [qualification_document_result, id_document_result] = await Promise.all([s3Uploader(qualification_document), s3Uploader(id_document)]);
-
     if (!qualification_document_result.success) {
       return next(createError(500, `Error uploading qualification document: ${qualification_document_result.error}`));
     }
-
     if (!id_document_result.success) {
       return next(createError(500, `Error uploading id document: ${id_document_result.error}`));
     }
     userData.qualification_document = qualification_document_result.url;
     userData.id_document = id_document_result.url;
-    userData.travel_radius_km = Number(userData.travel_radius_km);
   }
+
   const newUser = await createUserByRole(role, userData);
 
   const verificationUrl = `${process.env.CLIENT_URL}/verify-email?email=${encodeURIComponent(email)}&token=${encodeURIComponent(verificationToken)}`;
@@ -153,6 +154,7 @@ export const loginUser = catchAsync(async (req, res, next) => {
     userId: user._id,
     email: user.email,
     role: user.role,
+    travelRadius: user.travel_radius_km,
   };
 
   const token = jwt.sign(tokenPayload, process.env.JWT_SECRET, {

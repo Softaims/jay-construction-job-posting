@@ -22,6 +22,7 @@ export const userDto = (user) => {
       company_number: user.company_number,
       services_offered: user.services_offered,
       admin_status: user.admin_status,
+      travel_radius_km: user.travel_radius_km,
     };
   }
 

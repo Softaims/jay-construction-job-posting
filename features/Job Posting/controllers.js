@@ -23,7 +23,11 @@ export const getAllJobs = catchAsync(async (req, res, next) => {
   let allowedTargetUsers = [];
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 10;
-  const { latitude, longitude, distanceInKm } = req.query;
+  const { latitude, longitude } = req.query;
+  let distanceInKm = req.query.distanceInKm ? Number(req.query.distanceInKm) : req.user.travelRadius;
+  if (!latitude || !longitude) {
+    return next(createError(400, "Latitude and longitude are required."));
+  }
 
   if (role === "job_seeker") {
     allowedTargetUsers = ["job_seeker", "both"];

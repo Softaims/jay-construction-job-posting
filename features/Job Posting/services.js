@@ -1,59 +1,35 @@
 import mongoose from "mongoose";
 import { Job } from "../../shared/models/JobModel.js";
 export const createAJob = async (jobData) => {
- let newJob=new Job(jobData)
+  let newJob = new Job(jobData);
   return await newJob.save();
 };
 
-
-
-export const fetchJobs = async (
-  allowedTargetUsers,
-  page ,
-  limit ,
-  latitude,
-  longitude,
-  distanceInKm
-) => {
+export const fetchJobs = async (allowedTargetUsers, page, limit, latitude, longitude, distanceInKm) => {
   const skip = (page - 1) * limit;
 
   const query = {
     target_user: { $in: allowedTargetUsers },
   };
-
   if (latitude && longitude && distanceInKm) {
-    const distanceInMiles = distanceInKm/1.609;
-
+    const distanceInMiles = distanceInKm / 1.609;
     query.job_location = {
       $geoWithin: {
-        $centerSphere: [
-          [parseFloat(longitude), parseFloat(latitude)],
-          distanceInMiles / 3963.2, 
-        ],
+        $centerSphere: [[parseFloat(longitude), parseFloat(latitude)], distanceInMiles / 3963.2],
       },
     };
-  
-
-    console.log("query is",query)
   }
 
-  // Fetch paginated jobs
-  const jobs = await Job.find(query)
-    .skip(skip)
-    .limit(limit)
-    .populate("created_by", "company_name company_number email role");
+  const jobs = await Job.find(query).skip(skip).limit(limit).populate("created_by", "company_name company_number email role");
 
-  // Count total (based on the same query)
   const total = await Job.countDocuments(query);
 
   return { jobs, total };
 };
 
-
-
 export const fetchJobById = async (id) => {
   if (!mongoose.Types.ObjectId.isValid(id)) {
-   return null
+    return null;
   }
-  return await Job.findById(id).populate("created_by","company_name company_number email role");
+  return await Job.findById(id).populate("created_by", "company_name company_number email role");
 };

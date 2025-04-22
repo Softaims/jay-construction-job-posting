@@ -5,6 +5,7 @@ const SubcontractorSchema = new mongoose.Schema({
   company_name: { type: String, required: true },
   company_number: { type: String, required: true },
   services_offered: [{ type: String, required: true }],
+  travel_radius_km: { type: Number, required: true },
   admin_status: {
     type: String,
     enum: ["not-verified", "pending", "verified", "rejected"],
