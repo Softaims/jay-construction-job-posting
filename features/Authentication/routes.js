@@ -1,6 +1,6 @@
 import express from "express";
 const router = express.Router();
-import { createUser, verifyEmail,resendVerificationEmail, loginUser, forgotPassword, resetPassword, logoutUser} from "./controllers.js";
+import { createUser, verifyEmail, resendVerificationEmail, loginUser, forgotPassword, resetPassword, logoutUser } from "./controllers.js";
 import { signupValidator } from "./validators/signupValidator.js";
 import { validate } from "../../middlewares/validate.js";
 import { emailVerificationValidator } from "./validators/emailVerificationValidator.js";
@@ -8,15 +8,15 @@ import { resendEmailVerificationValidator } from "./validators/resendEmailVerifi
 import { loginValidator } from "./validators/loginValidator.js";
 import { forgotPasswordValidator } from "./validators/forgotPasswordValidator.js";
 import { resetPasswordValidator } from "./validators/resetPasswordValidator.js";
-
-
+import { upload } from "../../utils/multer.js";
+import { validateDocuments } from "./validators/validateDocuments.js";
 /**
  * @swagger
  * /register:
  *   post:
  *     summary: Register a new user
  *     description: |
- *       Register a new user based on their role.  
+ *       Register a new user based on their role.
  *       The request body structure varies depending on the `role` value.
  *     requestBody:
  *       required: true
@@ -36,10 +36,9 @@ import { resetPasswordValidator } from "./validators/resetPasswordValidator.js";
  *         description: User with this email already exists.
  */
 
-router.post("/register",signupValidator, createUser);
+router.post("/register", upload.fields([{ name: "qualification_document" }, { name: "id_document" }]), validateDocuments, signupValidator, createUser);
 
-
-router.post("/verify-email",validate(emailVerificationValidator), verifyEmail);
+router.post("/verify-email", validate(emailVerificationValidator), verifyEmail);
 
 /**
  * @swagger
@@ -106,14 +105,13 @@ router.post("/verify-email",validate(emailVerificationValidator), verifyEmail);
  */
 router.post("/resend-verification-email", validate(resendEmailVerificationValidator), resendVerificationEmail);
 
-
 /**
  * @swagger
  * /login:
  *   post:
  *     summary: User login
  *     description: |
- *       This endpoint allows users to log in by providing their email and password. 
+ *       This endpoint allows users to log in by providing their email and password.
  *       If the user's email is not verified, a new verification email is sent.
  *     requestBody:
  *       required: true
@@ -202,15 +200,13 @@ router.post("/resend-verification-email", validate(resendEmailVerificationValida
  */
 router.post("/login", validate(loginValidator), loginUser);
 
-
-
 /**
  * @swagger
  * /forgot-password:
  *   post:
  *     summary: Request password reset
  *     description: |
- *       This endpoint allows users to request a password reset by providing their email address. 
+ *       This endpoint allows users to request a password reset by providing their email address.
  *       If a reset request has already been sent recently, the user will be notified.
  *     requestBody:
  *       required: true
@@ -270,15 +266,13 @@ router.post("/login", validate(loginValidator), loginUser);
  */
 router.post("/forgot-password", validate(forgotPasswordValidator), forgotPassword);
 
-
-
 /**
  * @swagger
  * /reset-password:
  *   post:
  *     summary: Reset user password
  *     description: |
- *       This endpoint allows users to reset their password using a reset token sent to their email. 
+ *       This endpoint allows users to reset their password using a reset token sent to their email.
  *       The user must provide the reset token, their email, and the new password.
  *     requestBody:
  *       required: true
@@ -347,15 +341,13 @@ router.post("/forgot-password", validate(forgotPasswordValidator), forgotPasswor
  */
 router.post("/reset-password", validate(resetPasswordValidator), resetPassword);
 
-
-
 /**
  * @swagger
  * /logout:
  *   post:
  *     summary: Log out the user and clear the authentication token
  *     description: |
- *       This endpoint logs out the user by verifying and blacklisting their authentication token, 
+ *       This endpoint logs out the user by verifying and blacklisting their authentication token,
  *       clearing the JWT token from the client's cookies, and ending the session.
  *     responses:
  *       200:

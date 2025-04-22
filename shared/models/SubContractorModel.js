@@ -7,11 +7,11 @@ const SubcontractorSchema = new mongoose.Schema({
   services_offered: [{ type: String, required: true }],
   admin_status: {
     type: String,
-    enum: ['not-verified', 'pending', 'verified', 'rejected'],
-    default: 'not-verified', 
+    enum: ["not-verified", "pending", "verified", "rejected"],
+    default: "not-verified",
   },
   compliance_certificate: { type: String },
   verification_certificate: { type: String },
 });
 
-export const Subcontractor = User.discriminator('subcontractor', SubcontractorSchema);
+export const Subcontractor = User.discriminator("subcontractor", SubcontractorSchema);

@@ -1,12 +1,13 @@
-export const validateVerificationCertificates = (req, res, next) => {
+export const validateDocuments = (req, res, next) => {
   const allowedExtensions = [".jpg", ".jpeg", ".png", ".doc", ".docx", ".pdf"];
   const maxSizeInBytes = 2 * 1024 * 1024;
   const files = req.files;
-
-  if (!files || !files.compliance_certificate || !files.verification_certificate) {
+  const { role } = req.body;
+  if (role != "job_seeker") return next();
+  if (!files || !files.id_document || !files.qualification_document) {
     return res.status(400).json({
       success: false,
-      message: "Both compliance_certificate and verification_certificate are required.",
+      message: "Both id document and qualification documents are required.",
     });
   }
 

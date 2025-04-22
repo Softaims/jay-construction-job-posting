@@ -18,7 +18,6 @@ export const errorHandler = (err, req, res, next) => {
     const field = Object.keys(err.keyValue)[0];
     message = `${field} already exists`;
   }
-
   res.status(statusCode).json({
     success: false,
     message,

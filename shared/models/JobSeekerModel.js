@@ -6,8 +6,8 @@ const JobSeekerSchema = new mongoose.Schema({
   trade: { type: String, required: true },
   travel_radius_km: { type: Number, required: true },
   phone_number: { type: String, required: true },
-  profile_picture: { type: String },
-  id_document: { type: String }
+  qualification_document: { type: String },
+  id_document: { type: String },
 });
 
-export const JobSeeker = User.discriminator('job_seeker', JobSeekerSchema);
+export const JobSeeker = User.discriminator("job_seeker", JobSeekerSchema);
