@@ -6,15 +6,13 @@ import { authMiddleware } from "../../middlewares/authMiddleware.js";
 import { authorizeMiddleware } from "../../middlewares/authorizeMiddleware.js";
 const router = express.Router();
 
-
-
 /**
  * @swagger
  * /post-job:
  *   post:
  *     summary: Create a new job post
  *     description: |
- *       This endpoint allows authenticated users with the "main_contractor" or "subcontractor" roles 
+ *       This endpoint allows authenticated users with the "main_contractor" or "subcontractor" roles
  *       to post new job listings. The user must be approved by the admin before they can post a job.
  *     requestBody:
  *       required: true
@@ -104,8 +102,7 @@ const router = express.Router();
  *     tags:
  *       - Job Postings
  */
-router.post("/post-job", authMiddleware, authorizeMiddleware("main_contractor", "subcontractor"), validate(jobPostValidator), createJobPost);
-
+router.post("/post-job", authMiddleware, authorizeMiddleware("main_contractor"), validate(jobPostValidator), createJobPost);
 
 /**
  * @swagger
@@ -113,8 +110,8 @@ router.post("/post-job", authMiddleware, authorizeMiddleware("main_contractor", 
  *   get:
  *     summary: Get all available jobs
  *     description: |
- *       This endpoint retrieves all available jobs based on the user's role. 
- *       The response is filtered by target user type (job_seeker, subcontractor, both), 
+ *       This endpoint retrieves all available jobs based on the user's role.
+ *       The response is filtered by target user type (job_seeker, subcontractor, both),
  *       and supports pagination.
  *     parameters:
  *       - in: query
@@ -206,9 +203,7 @@ router.post("/post-job", authMiddleware, authorizeMiddleware("main_contractor", 
  *     tags:
  *       - Jobs
  */
-router.get("/jobs",authMiddleware,authorizeMiddleware("main_contractor","subcontractor","job_seeker"),getAllJobs)
-
-
+router.get("/jobs", authMiddleware, authorizeMiddleware("main_contractor", "subcontractor", "job_seeker"), getAllJobs);
 
 /**
  * @swagger
@@ -216,7 +211,7 @@ router.get("/jobs",authMiddleware,authorizeMiddleware("main_contractor","subcont
  *   get:
  *     summary: Get job details by ID
  *     description: |
- *       This endpoint retrieves the details of a specific job by its ID. 
+ *       This endpoint retrieves the details of a specific job by its ID.
  *       Access is role-based, and only users with appropriate target user access can view the job.
  *     parameters:
  *       - in: path
@@ -292,7 +287,5 @@ router.get("/jobs",authMiddleware,authorizeMiddleware("main_contractor","subcont
  *       - Jobs
  */
 router.get("/jobs/:id", authMiddleware, authorizeMiddleware("main_contractor", "subcontractor", "job_seeker"), getJobById);
-
-
 
 export default router;

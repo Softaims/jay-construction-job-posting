@@ -5,7 +5,7 @@ export const createAJob = async (jobData) => {
   return await newJob.save();
 };
 
-export const fetchJobs = async (allowedTargetUsers, page, limit, latitude, longitude, distanceInKm) => {
+export const fetchJobs = async (allowedTargetUsers, page, limit, latitude, longitude, distanceInKm, serviceType) => {
   const skip = (page - 1) * limit;
 
   const query = {
@@ -18,6 +18,9 @@ export const fetchJobs = async (allowedTargetUsers, page, limit, latitude, longi
         $centerSphere: [[parseFloat(longitude), parseFloat(latitude)], distanceInMiles / 3963.2],
       },
     };
+  }
+  if (serviceType) {
+    query["services.service_name"] = serviceType;
   }
 
   const jobs = await Job.find(query).skip(skip).limit(limit).populate("created_by", "company_name company_number email role");

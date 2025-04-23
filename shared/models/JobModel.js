@@ -15,9 +15,9 @@ const JobSchema = new mongoose.Schema(
     job_location: {
       type: {
         type: String,
-        enum: ['Point'],
+        enum: ["Point"],
         required: true,
-        default: 'Point',
+        default: "Point",
       },
       coordinates: {
         type: [Number], // [longitude, latitude]
@@ -43,6 +43,10 @@ const JobSchema = new mongoose.Schema(
           required: true,
         },
         resource_count: {
+          type: Number,
+          default: 0,
+        },
+        no_of_days: {
           type: Number,
           default: 0,
         },

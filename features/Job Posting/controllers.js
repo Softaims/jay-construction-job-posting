@@ -5,12 +5,12 @@ import { catchAsync } from "../../utils/catchAsync.js";
 import createError from "http-errors";
 
 export const createJobPost = catchAsync(async (req, res) => {
-  const userId = req.user;
-  const user = await getUserById(userId);
+  const { _id } = req.user;
+  const user = await getUserById(_id);
   if (user.admin_status != "verified") {
     return next(createError(403, "Forbidden: You cannot post a job until admin approval."));
   }
-  const newJob = await createAJob({ ...req.body, created_by: userId });
+  const newJob = await createAJob({ ...req.body, created_by: _id });
 
   return res.status(201).json({
     message: "Job created successfully",
@@ -23,7 +23,7 @@ export const getAllJobs = catchAsync(async (req, res, next) => {
   let allowedTargetUsers = [];
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 10;
-  const { latitude, longitude } = req.query;
+  const { latitude, longitude, serviceType } = req.query;
   let distanceInKm = req.query.distanceInKm ? Number(req.query.distanceInKm) : req.user.travelRadius;
   if (!latitude || !longitude) {
     return next(createError(400, "Latitude and longitude are required."));
@@ -40,7 +40,7 @@ export const getAllJobs = catchAsync(async (req, res, next) => {
   }
 
   console.log("calling fetch job");
-  const { jobs, total } = await fetchJobs(allowedTargetUsers, page, limit, latitude, longitude, distanceInKm);
+  const { jobs, total } = await fetchJobs(allowedTargetUsers, page, limit, latitude, longitude, distanceInKm, serviceType);
 
   return res.status(200).json({
     message: "Jobs fetched successfully",
