@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { constructionServices } from "../../constants/constructionServices.js";
 
 const JobSchema = new mongoose.Schema(
   {
@@ -28,12 +29,13 @@ const JobSchema = new mongoose.Schema(
     job_type: {
       type: String,
       required: true,
+      enum: ["full-time", "part-time"],
     },
 
     target_user: {
       type: String,
       required: true,
-      enum: ["job_seeker", "subcontractor", "both"],
+      enum: ["job_seeker", "subcontractor"],
     },
 
     services: [
@@ -41,6 +43,7 @@ const JobSchema = new mongoose.Schema(
         service_name: {
           type: String,
           required: true,
+          enum: constructionServices,
         },
         resource_count: {
           type: Number,

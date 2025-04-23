@@ -1,11 +1,12 @@
 import { z } from "zod";
-
+import { constructionServices } from "../../../constants/constructionServices.js";
 export const jobPostValidator = z
   .object({
     project_image: z.string().optional(),
 
     job_title: z.string({
-      required_error: "Job title is required",
+      required_error: "job_title is required",
+      invalid_type_error: "job_title must be a string",
     }),
 
     job_location: z.object(
@@ -15,9 +16,11 @@ export const jobPostValidator = z
           .tuple([
             z.number({
               required_error: "Longitude is required",
+              invalid_type_error: "Longitude must be a number",
             }),
             z.number({
               required_error: "Latitude is required",
+              invalid_type_error: "Latitude must be a number",
             }),
           ])
           .refine(([lng, lat]) => lng >= -180 && lng <= 180 && lat >= -90 && lat <= 90, {
@@ -25,50 +28,74 @@ export const jobPostValidator = z
           }),
       },
       {
-        required_error: "Job location is required",
+        required_error: "job_location is required",
+        invalid_type_error: "job_location must be an object",
       }
     ),
 
-    job_type: z.string({
-      required_error: "Job type is required",
+    job_type: z.enum(["part-time", "full-time"], {
+      required_error: "job_type is required (part-time or full-time)",
+      invalid_type_error: "job_type must be 'part-time' or 'full-time'",
     }),
 
-    target_user: z.enum(["job_seeker", "subcontractor", "both"], {
-      required_error: "Target user is required",
+    target_user: z.enum(["job_seeker", "subcontractor"], {
+      required_error: "target_user is required",
+      invalid_type_error: "target_user must be 'job_seeker' or 'subcontractor'",
     }),
 
     services: z
       .array(
         z.object({
-          service_name: z.string({
-            required_error: "Service name is required",
+          service_name: z.enum(constructionServices, {
+            required_error: "service_name is required",
+            invalid_type_error: "service_name is invalid",
           }),
-          resource_count: z.number().optional(),
-          number_of_days: z.number().optional(),
-        })
+          resource_count: z.number({ invalid_type_error: "resource_count must be a number" }).optional(),
+          number_of_days: z.number({ invalid_type_error: "number_of_days must be a number" }).optional(),
+        }),
+        { required_error: "services array is required", invalid_type_error: "services must be an array" }
       )
       .min(1, "At least one service is required"),
 
-    job_priority: z.boolean().optional(),
-    budget: z.number().optional(),
+    job_priority: z.boolean({ invalid_type_error: "job_priority must be a boolean" }).optional(),
+    budget: z.number({ invalid_type_error: "budget must be a number" }).optional(),
   })
   .superRefine((data, ctx) => {
-    if (data.target_user === "job_seeker") {
-      data.services.forEach((service, index) => {
-        if (service.resource_count == null) {
+    data.services.forEach((service, index) => {
+      if (data.target_user === "job_seeker") {
+        if (!service.resource_count) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             path: ["services", index, "resource_count"],
-            message: "Resource count is required for job_seeker",
+            message: "resource_count is required for job_seeker",
           });
         }
-        if (service.number_of_days == null) {
+
+        if (!service.number_of_days) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             path: ["services", index, "number_of_days"],
-            message: "Number of days is required for job_seeker",
+            message: "number_of_days is required for job_seeker",
           });
         }
-      });
-    }
+      }
+
+      if (data.target_user === "subcontractor") {
+        if (service.resource_count) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ["services", index, "resource_count"],
+            message: "Job should not specify resource_count for target user subcontractor",
+          });
+        }
+
+        if (service.number_of_days != null) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ["services", index, "number_of_days"],
+            message: "Job should not specify number_of_days for target user subcontractor",
+          });
+        }
+      }
+    });
   });

@@ -4,7 +4,7 @@ import { getUserById } from "../../shared/services/services.js";
 import { catchAsync } from "../../utils/catchAsync.js";
 import createError from "http-errors";
 
-export const createJobPost = catchAsync(async (req, res) => {
+export const createJobPost = catchAsync(async (req, res, next) => {
   const { _id } = req.user;
   const user = await getUserById(_id);
   if (user.admin_status != "verified") {
