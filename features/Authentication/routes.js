@@ -1,6 +1,15 @@
 import express from "express";
 const router = express.Router();
-import { createUser, verifyEmail, resendVerificationEmail, loginUser, forgotPassword, resetPassword, logoutUser } from "./controllers.js";
+import {
+  createUser,
+  verifyEmail,
+  resendVerificationEmail,
+  loginUser,
+  forgotPassword,
+  resetPassword,
+  logoutUser,
+  checkEmail,
+} from "./controllers.js";
 import { signupValidator } from "./validators/signupValidator.js";
 import { validate } from "../../middlewares/validate.js";
 import { emailVerificationValidator } from "./validators/emailVerificationValidator.js";
@@ -10,6 +19,7 @@ import { forgotPasswordValidator } from "./validators/forgotPasswordValidator.js
 import { resetPasswordValidator } from "./validators/resetPasswordValidator.js";
 import { upload } from "../../utils/multer.js";
 import { validateDocuments } from "./validators/validateDocuments.js";
+import { checkEmailValidator } from "./validators/checkEmailValidator.js";
 /**
  * @swagger
  * /register:
@@ -36,8 +46,14 @@ import { validateDocuments } from "./validators/validateDocuments.js";
  *         description: User with this email already exists.
  */
 
-router.post("/register", upload.fields([{ name: "qualification_document" }, { name: "id_document" }]), validateDocuments, signupValidator, createUser);
-
+router.post(
+  "/register",
+  upload.fields([{ name: "qualification_document" }, { name: "id_document" }]),
+  validateDocuments,
+  signupValidator,
+  createUser
+);
+router.post("/check-email", validate(checkEmailValidator), checkEmail);
 router.post("/verify-email", validate(emailVerificationValidator), verifyEmail);
 
 /**

@@ -34,7 +34,10 @@ export const createUser = catchAsync(async (req, res, next) => {
   if (req.body.role == "job_seeker") {
     const qualification_document = req.files.qualification_document?.[0] || null;
     const id_document = req.files.id_document?.[0] || null;
-    const [qualification_document_result, id_document_result] = await Promise.all([s3Uploader(qualification_document), s3Uploader(id_document)]);
+    const [qualification_document_result, id_document_result] = await Promise.all([
+      s3Uploader(qualification_document),
+      s3Uploader(id_document),
+    ]);
     if (!qualification_document_result.success) {
       return next(createError(500, `Error uploading qualification document: ${qualification_document_result.error}`));
     }
@@ -47,13 +50,28 @@ export const createUser = catchAsync(async (req, res, next) => {
 
   const newUser = await createUserByRole(role, userData);
 
-  const verificationUrl = `${process.env.CLIENT_URL}/verify-email?email=${encodeURIComponent(email)}&token=${encodeURIComponent(verificationToken)}`;
+  const verificationUrl = `${process.env.CLIENT_URL}/verify-email?email=${encodeURIComponent(email)}&token=${encodeURIComponent(
+    verificationToken
+  )}`;
   await sendMail(email, "Email Verification", verificationUrl);
 
   return res.status(201).json({
     success: true,
     message: "User registered successfully. Please verify your email.",
     data: userDto(newUser),
+  });
+});
+
+export const checkEmail = catchAsync(async (req, res, next) => {
+  const { email } = req.body;
+
+  const existingUser = await getUserByEmail(email);
+  if (existingUser) {
+    return next(createError(409, "User with this email already exists"));
+  }
+  return res.status(200).json({
+    success: true,
+    message: "Email is unique",
   });
 });
 
@@ -107,7 +125,9 @@ export const resendVerificationEmail = catchAsync(async (req, res, next) => {
   user.verificationTokenExpiry = verificationTokenExpiry;
   await user.save();
 
-  const verificationUrl = `${process.env.CLIENT_URL}/verify-email?email=${encodeURIComponent(email)}&token=${encodeURIComponent(verificationToken)}`;
+  const verificationUrl = `${process.env.CLIENT_URL}/verify-email?email=${encodeURIComponent(email)}&token=${encodeURIComponent(
+    verificationToken
+  )}`;
 
   await sendMail(email, "Resend Email Verification", verificationUrl);
 
@@ -135,7 +155,9 @@ export const loginUser = catchAsync(async (req, res, next) => {
       user.verificationTokenExpiry = verificationTokenExpiry;
       await user.save();
 
-      const verificationUrl = `${process.env.CLIENT_URL}/verify-email?email=${encodeURIComponent(email)}&token=${encodeURIComponent(verificationToken)}`;
+      const verificationUrl = `${process.env.CLIENT_URL}/verify-email?email=${encodeURIComponent(email)}&token=${encodeURIComponent(
+        verificationToken
+      )}`;
 
       await sendMail(email, "Resend Email Verification", verificationUrl);
 
@@ -195,7 +217,9 @@ export const forgotPassword = catchAsync(async (req, res, next) => {
   user.resetPasswordExpiry = resetPasswordExpiry;
   await user.save();
 
-  const resetUrl = `${process.env.CLIENT_URL}/reset-password?token=${encodeURIComponent(resetPasswordToken)}&email=${encodeURIComponent(email)}`;
+  const resetUrl = `${process.env.CLIENT_URL}/reset-password?token=${encodeURIComponent(resetPasswordToken)}&email=${encodeURIComponent(
+    email
+  )}`;
 
   // Send the reset email
   await sendMail(email, "Password Reset Request", resetUrl);
