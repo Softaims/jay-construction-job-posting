@@ -9,10 +9,11 @@ import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 import { swaggerOptions } from "./utils/swagger.config.js";
 import connectDB from "./utils/dbConnection.js";
-import userAuthRoutes from "./features/Authentication/routes.js"
-import JobPostRoutes from "./features/Job Posting/routes.js"
-import DocumentVerificationRoutes from "./features/Document Verification/routes.js"
 import { errorHandler } from "./middlewares/errorHandler.js";
+import userAuthRoutes from "./features/Authentication/routes.js";
+import JobPostRoutes from "./features/Job Posting/routes.js";
+import DocumentVerificationRoutes from "./features/Document Verification/routes.js";
+import UserRoutes from "./features/User/routes.js";
 
 configDotenv();
 connectDB();
@@ -21,24 +22,24 @@ export const app = express();
 
 app.use(
   cors({
-    origin:true,
+    origin: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     credentials: true,
   })
 );
-app.use(express.json({limit:"10mb"}));
+app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 app.use(cookieParser(process.env.COOKIE_SECRET));
-app.use(compression()); 
-app.use(morgan(process.env.NODE_ENV === "production" ? "combined" : "dev")); 
+app.use(compression());
+app.use(morgan(process.env.NODE_ENV === "production" ? "combined" : "dev"));
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100,
   message: "Too many requests from this IP, please try again later.",
   standardHeaders: true,
-  legacyHeaders: false, 
+  legacyHeaders: false,
 });
-app.use(limiter)
+app.use(limiter);
 
 const swaggerDocs = swaggerJSDoc(swaggerOptions);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
@@ -68,6 +69,6 @@ app.get("/", (req, res) => {
 app.use("/api/v0", userAuthRoutes);
 app.use("/api/v0", JobPostRoutes);
 app.use("/api/v0", DocumentVerificationRoutes);
+app.use("/api/v0", UserRoutes);
 
-app.use(errorHandler)
-
+app.use(errorHandler);

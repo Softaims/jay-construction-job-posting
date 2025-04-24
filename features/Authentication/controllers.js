@@ -2,7 +2,7 @@ import { createUserByRole, updateUserEmailVerificationStatus, createBlacklistedT
 import { getUserByEmail } from "../../shared/services/services.js";
 import bcrypt from "bcrypt";
 import { sendMail } from "../../utils/email.utils.js";
-import { userDto } from "./dtos/userDto.js";
+import { userDto } from "../../shared/dtos/userDto.js";
 import jwt from "jsonwebtoken";
 import { catchAsync } from "../../utils/catchAsync.js";
 import createError from "http-errors";
