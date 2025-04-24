@@ -1,15 +1,22 @@
 import { io } from "socket.io-client";
 
 const socket = io("http://localhost:9000", {
-    auth: {
-        email: "ali@gmail.com"
-      },
-  });
-
+  auth: {
+    userId: "ali123",
+  },
+});
 
 setTimeout(() => {
-  socket.emit("sendMessageToUser", {
-    recipientEmail: "ahmad@gmail.com",
-    message: "Hello Ahmad! It's Ali",
-  });
+  socket.emit(
+    "sendMessage",
+    {
+      senderId: "ali123",
+      recipientId: "ahmad123",
+      type: "text",
+      content: "Hello Ahmad! It's Ali",
+    },
+    (response) => {
+      console.log("message status", response);
+    }
+  );
 }, 10000);

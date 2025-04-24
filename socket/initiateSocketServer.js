@@ -9,11 +9,6 @@ export const initiateSocketServer = (httpServer) => {
       methods: ["GET", "POST"],
       credentials: true,
     },
-
-    
   });
-
   setupSocketListeners(io);
 };
-
-
