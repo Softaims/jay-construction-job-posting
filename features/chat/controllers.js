@@ -1,7 +1,33 @@
-import { saveMessage } from "./services.js";
+import { fetchAllConversations, fetchChatMessages, saveMessage } from "./services.js";
 import { updateConversationLastMessage } from "./services.js";
+import { catchAsync } from "../../utils/catchAsync.js";
 
-export const createAndSendMessage = async ({ senderId, recipientId, content, type, io, connectedUsers }) => {
+export const getAllConversations = catchAsync(async (req, res) => {
+  const { _id } = req.user;
+  const conversations = await fetchAllConversations(_id);
+
+  res.status(200).json({
+    status: "success",
+    results: conversations.length,
+    data: conversations,
+  });
+});
+
+export const getMessagesWithUser = catchAsync(async (req, res) => {
+  const user1 = req.user._id;
+  const user2 = req.params.userId;
+  const conversationId = [user1.toString(), user2.toString()].sort();
+
+  const messages = await fetchChatMessages(conversationId);
+
+  res.status(200).json({
+    status: "success",
+    results: messages.length,
+    data: messages,
+  });
+});
+
+export const createAndSendMessage = async ({ senderId, recipientId, content, type }) => {
   const [user1, user2] = [senderId.toString(), recipientId.toString()].sort();
   const conversationId = `${first}_${second}`;
 

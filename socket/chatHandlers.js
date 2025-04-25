@@ -1,15 +1,14 @@
 import { connectedUsers } from "./connectedUsers.js";
 import { createAndSendMessage } from "../features/chat/controllers.js";
 
-export const chatHandlers = (io, socket, userId) => {
+export const chatHandlers = (io, socket) => {
   socket.on("sendMessage", async (message, callback) => {
     try {
-      // const savedMessage = await createAndSendMessage({ senderId, recipientId, content, type, io, connectedUsers });
+      const senderId = socket.user._id;
+      await createAndSendMessage({ senderId, ...message });
       const recipientSockets = connectedUsers.get(message.recipientId);
-      console.log("recipient sockets", recipientSockets);
       if (recipientSockets && recipientSockets.size > 0) {
         recipientSockets.forEach((socketId) => {
-          console.log(`emitting message to socketid ${socketId}`);
           io.to(socketId).emit("receiveMessage", message);
         });
       }
