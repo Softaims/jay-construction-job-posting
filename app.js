@@ -10,10 +10,12 @@ import swaggerUi from "swagger-ui-express";
 import { swaggerOptions } from "./utils/swagger.config.js";
 import connectDB from "./utils/dbConnection.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
+
 import userAuthRoutes from "./features/Authentication/routes.js";
 import JobPostRoutes from "./features/Job Posting/routes.js";
 import DocumentVerificationRoutes from "./features/Document Verification/routes.js";
 import UserRoutes from "./features/User/routes.js";
+import ChatRoutes from "./features/chat/routes.js";
 
 configDotenv();
 connectDB();
@@ -70,5 +72,6 @@ app.use("/api/v0", userAuthRoutes);
 app.use("/api/v0", JobPostRoutes);
 app.use("/api/v0", DocumentVerificationRoutes);
 app.use("/api/v0", UserRoutes);
+app.use("/api/v0", ChatRoutes);
 
 app.use(errorHandler);

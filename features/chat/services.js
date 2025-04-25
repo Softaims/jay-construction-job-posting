@@ -5,8 +5,15 @@ export const fetchAllConversations = async (_id) => {
   return await Conversation.find({
     participants: { $in: [_id] },
   })
-    .populate("participants", "email role")
-    .populate("lastMessage")
+    .populate("participants", "email role company_name full_name")
+    .populate({
+      path: "lastMessage",
+      select: "sender type content updatedAt",
+      populate: {
+        path: "sender",
+        select: "email role company_name full_name",
+      },
+    })
     .sort({ updatedAt: -1 });
 };
 
@@ -25,7 +32,7 @@ export const saveMessage = async (conversationId, senderId, content, type) => {
   return await newMessage.save();
 };
 
-export const updateConversationLastMessage = async (conversationId, user1, user2, second, messageId) => {
+export const updateConversationLastMessage = async (conversationId, user1, user2, messageId) => {
   let conversation = await Conversation.findById(conversationId);
   if (!conversation) {
     conversation = new Conversation({
