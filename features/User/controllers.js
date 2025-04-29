@@ -2,11 +2,12 @@ import { getUserById } from "../../shared/services/services.js";
 import { userDto } from "../../shared/dtos/userDto.js";
 import { updateUser } from "./services.js";
 import { catchAsync } from "../../utils/catchAsync.js";
+import { s3Uploader } from "../../utils/s3Uploader.js";
+import createError from "http-errors";
 
 export const getMe = catchAsync(async (req, res) => {
   const { _id } = req.user;
   const user = await getUserById(_id);
-  console.log("user is", user);
   return res.status(200).json({
     success: true,
     message: "User profile fetched successfully",
@@ -18,18 +19,16 @@ export const updateUserProfile = catchAsync(async (req, res, next) => {
   const { _id, role } = req.user;
   const updateData = { ...req.body };
 
-  // Check if a profile image is provided
-  // if (req.file) {
-  //   const uploadResult = await s3Uploader(req.file);
+  if (req.files && req.files.profile_picture && req.files.profile_picture.length > 0) {
+    const file = req.files.profile_picture[0];
+    const uploadResult = await s3Uploader(file);
 
-  //   if (!uploadResult.success) {
-  //     console.error("Failed to upload profile image:", uploadResult.error);
-  //     return next(createError(500, "Failed to upload profile image."));
-  //   }
-
-  //   updateData.profileImage = uploadResult.url;
-  // }
-  console.log("updated", updateData);
+    if (!uploadResult.success) {
+      console.error("Failed to upload profile image:", uploadResult.error);
+      return next(createError(500, "Failed to upload profile image."));
+    }
+    updateData.profile_picture = uploadResult.url;
+  }
   const updatedUser = await updateUser(_id, role, updateData);
 
   if (!updatedUser) {

@@ -1,8 +1,13 @@
 import { validate } from "../../../middlewares/validate.js";
 import { z } from "zod";
 
+const baseSchema = {
+  description: z.string().min(20, "Description must be at least 20 characters").optional(),
+};
+
 export const mainContractorSchema = z
   .object({
+    ...baseSchema,
     company_name: z.string().min(2, "Company name must be at least 2 characters").optional(),
     company_number: z.string().min(4, "Company number must be at least 4 characters").optional(),
   })
@@ -10,6 +15,7 @@ export const mainContractorSchema = z
 
 export const subcontractorSchema = z
   .object({
+    ...baseSchema,
     company_name: z.string().min(2, "Company name must be at least 2 characters").optional(),
     company_number: z.string().min(4, "Company number must be at least 4 characters").optional(),
     travel_radius_km: z.number().min(1, "Travel radius must be at least 1 km").optional(),
@@ -19,6 +25,7 @@ export const subcontractorSchema = z
 
 export const jobSeekerSchema = z
   .object({
+    ...baseSchema,
     full_name: z.string().min(2, "Full name must be at least 2 characters").optional(),
     phone_number: z.string().min(8, "Phone number must be at least 8 digits").optional(),
     trade: z.string().min(2, "Trade must be at least 2 characters").optional(),

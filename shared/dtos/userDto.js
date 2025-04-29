@@ -4,6 +4,8 @@ export const userDto = (user) => {
     email: user.email,
     role: user.role,
     verifyEmail: user.verifyEmail,
+    description: user.description ?? "",
+    profile_picture: user.profile_picture ?? "",
   };
 
   if (user.role === "main_contractor") {

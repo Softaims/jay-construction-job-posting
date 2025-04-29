@@ -1,7 +1,6 @@
-import { S3Client,PutObjectCommand } from "@aws-sdk/client-s3";
-import { v4 as uuidv4 } from 'uuid';
-import path from 'path';
-
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { v4 as uuidv4 } from "uuid";
+import path from "path";
 
 const s3 = new S3Client({
   region: process.env.AWS_REGION,
@@ -13,7 +12,7 @@ const s3 = new S3Client({
 
 export const s3Uploader = async (file) => {
   try {
-    console.log("s3 file is",file.originalname)
+    console.log("s3 file is", file.originalname);
     const fileExtension = path.extname(file.originalname);
     const fileName = `${uuidv4()}${fileExtension}`;
 
@@ -22,6 +21,7 @@ export const s3Uploader = async (file) => {
       Key: fileName,
       Body: file.buffer,
       ContentType: file.mimetype,
+      ACL: "public-read",
     };
 
     await s3.send(new PutObjectCommand(params));
