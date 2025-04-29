@@ -5,7 +5,7 @@ const socket = io("http://localhost:9000", {
     userId: "ali123",
   },
 });
-
+console.log("starting");
 setTimeout(() => {
   socket.emit(
     "sendMessage",
@@ -19,4 +19,4 @@ setTimeout(() => {
       console.log("message status", response);
     }
   );
-}, 10000);
+}, 5000);

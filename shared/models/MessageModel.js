@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 const { Schema } = mongoose;
+
 const messageSchema = new mongoose.Schema(
   {
     conversation: {
@@ -14,7 +15,30 @@ const messageSchema = new mongoose.Schema(
     },
     content: {
       type: Schema.Types.Mixed,
-      required: true,
+      required: function () {
+        return this.type === "text";
+      },
+    },
+    enquiry: {
+      title: {
+        type: String,
+        required: function () {
+          return this.type === "enquiry";
+        },
+      },
+      description: {
+        type: String,
+        required: function () {
+          return this.type === "enquiry";
+        },
+      },
+      jobId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Job",
+        required: function () {
+          return this.type === "enquiry";
+        },
+      },
     },
     type: {
       type: String,

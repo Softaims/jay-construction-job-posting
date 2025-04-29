@@ -32,11 +32,11 @@ export const getMessagesWithUser = catchAsync(async (req, res, next) => {
   });
 });
 
-export const createAndSendMessage = async ({ senderId, recipientId, content, type }) => {
-  const [user1, user2] = [senderId.toString(), recipientId.toString()].sort();
+export const createAndSendMessage = async (message) => {
+  const [user1, user2] = [message.senderId.toString(), message.recipientId.toString()].sort();
   const conversationId = `${user1}_${user2}`;
 
-  const savedMessage = await saveMessage(conversationId, senderId, content, type);
+  const savedMessage = await saveMessage(conversationId, message);
 
   await updateConversationLastMessage(conversationId, user1, user2, savedMessage._id);
 

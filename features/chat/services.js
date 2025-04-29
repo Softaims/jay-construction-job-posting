@@ -21,15 +21,24 @@ export const fetchChatMessages = async (conversationId) => {
   return await Message.find({ conversation: conversationId }).populate("sender", "email role").sort({ createdAt: 1 });
 };
 
-export const saveMessage = async (conversationId, senderId, content, type) => {
-  const newMessage = new Message({
-    conversation: conversationId,
-    sender: senderId,
-    content,
-    type,
-  });
-
-  return await newMessage.save();
+export const saveMessage = async (conversationId, message) => {
+  if (message.type == "text") {
+    const newMessage = new Message({
+      conversation: conversationId,
+      sender: message.senderId,
+      type: message.type,
+      content: message.content,
+    });
+    return await newMessage.save();
+  } else if (message.type == "enquiry") {
+    const newMessage = new Message({
+      conversation: conversationId,
+      sender: message.senderId,
+      type: message.type,
+      enquiry: message.enquiry,
+    });
+    return await newMessage.save();
+  }
 };
 
 export const updateConversationLastMessage = async (conversationId, user1, user2, messageId) => {
