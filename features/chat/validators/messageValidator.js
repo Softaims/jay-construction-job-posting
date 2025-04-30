@@ -1,4 +1,5 @@
 import { z } from "zod";
+import mongoose from "mongoose";
 
 export const textMessageSchema = z.object({
   type: z.enum(["text"], {
@@ -47,9 +48,25 @@ export const enquiryMessageSchema = z.object({
 });
 
 export const messageValidator = (message) => {
+  if (!message.type) {
+    return { success: false, error: "message type is required" };
+  }
+  if (!["text", "enquiry"].includes(message.type)) {
+    return { success: false, error: `Invalid message type. Allowed types are 'text' or 'enquiry'` };
+  }
+  if (!mongoose.Types.ObjectId.isValid(message.recipientId)) {
+    return { success: false, error: `Invalid recipientId` };
+  }
+
   if (message.type == "text") {
-    return textMessageSchema.safeParse(message);
+    const result = textMessageSchema.safeParse(message);
+    if (!result.success) {
+      return { success: false, error: result.error.errors[0].message };
+    }
   } else if (message.type == "enquiry") {
-    return enquiryMessageSchema.safeParse(message);
+    const result = enquiryMessageSchema.safeParse(message);
+    if (!result.success) {
+      return { success: false, error: result.error.errors[0].message };
+    }
   }
 };
