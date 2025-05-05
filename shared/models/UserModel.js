@@ -11,7 +11,7 @@ const UserSchema = new mongoose.Schema(
     role: {
       type: String,
       required: true,
-      enum: ["main_contractor", "subcontractor", "job_seeker"],
+      enum: ["main_contractor", "subcontractor", "job_seeker", "admin"],
     },
     verifyEmail: {
       type: Boolean,

@@ -12,8 +12,8 @@ import connectDB from "./utils/dbConnection.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
 
 import userAuthRoutes from "./features/Authentication/routes.js";
-import JobPostRoutes from "./features/Job Posting/routes.js";
-import DocumentVerificationRoutes from "./features/Document Verification/routes.js";
+import JobPostRoutes from "./features/JobPosting/routes.js";
+import DocumentVerificationRoutes from "./features/DocumentVerification/routes.js";
 import UserRoutes from "./features/User/routes.js";
 import ChatRoutes from "./features/chat/routes.js";
 
