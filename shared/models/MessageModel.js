@@ -39,6 +39,13 @@ const messageSchema = new mongoose.Schema(
           return this.type === "enquiry";
         },
       },
+      attachments: {
+        type: [String],
+        required: function () {
+          return this.type === "enquiry";
+        },
+        default: [],
+      },
     },
     type: {
       type: String,
