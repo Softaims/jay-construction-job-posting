@@ -39,6 +39,7 @@ export const enquiryMessageSchema = z.object({
         required_error: "jobId is required for enquiry",
         invalid_type_error: "jobId must be a string",
       }),
+      attachments: z.array(z.string()).optional().default([]),
     },
     {
       required_error: "enquiry object is required",

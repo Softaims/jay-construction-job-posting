@@ -23,7 +23,10 @@ export const updateAdminStatusDocumentVerification = async (userId, role, admin_
 export const fetchPendingContractors = async (page, limit) => {
   const skip = (page - 1) * limit;
   const query = { admin_status: "pending" };
-  const pendingContractors = await User.find(query).select("_id email role company_name company_number").skip(skip).limit(limit);
+  const pendingContractors = await User.find(query)
+    .select("_id email role company_name company_number compliance_certificate verification_certificate")
+    .skip(skip)
+    .limit(limit);
   const total = await User.countDocuments(query);
   return { pendingContractors, total };
 };
