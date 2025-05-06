@@ -57,16 +57,17 @@ export const messageValidator = (message) => {
   if (!mongoose.Types.ObjectId.isValid(message.recipientId)) {
     return { success: false, error: `Invalid recipientId` };
   }
-
   if (message.type == "text") {
     const result = textMessageSchema.safeParse(message);
     if (!result.success) {
       return { success: false, error: result.error.errors[0].message };
     }
+    return result;
   } else if (message.type == "enquiry") {
     const result = enquiryMessageSchema.safeParse(message);
     if (!result.success) {
       return { success: false, error: result.error.errors[0].message };
     }
+    return result;
   }
 };

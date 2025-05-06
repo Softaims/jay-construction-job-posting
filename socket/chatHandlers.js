@@ -15,14 +15,14 @@ export const chatHandlers = (io, socket) => {
       }
 
       const senderId = socket.user._id;
-      await createAndSendMessage({ senderId, ...message });
+      const data = await createAndSendMessage({ senderId, ...message });
       const recipientSockets = connectedUsers.get(message.recipientId);
       if (recipientSockets && recipientSockets.size > 0) {
         recipientSockets.forEach((socketId) => {
-          io.to(socketId).emit("receiveMessage", message);
+          io.to(socketId).emit("receiveMessage", data);
         });
       }
-      callback({ status: "ok", message: "Message sent", data: message });
+      callback({ status: "ok", message: "Message sent", data: data });
     } catch (error) {
       console.error("Error while sending message", error.message);
       callback({

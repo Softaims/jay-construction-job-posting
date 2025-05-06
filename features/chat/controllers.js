@@ -15,13 +15,10 @@ export const getAllConversations = catchAsync(async (req, res) => {
 });
 
 export const getMessagesWithUser = catchAsync(async (req, res, next) => {
-  const user1 = req.user._id;
-  const user2 = req.query.userId;
-  if (!user2) {
-    return next(createError(400, "userId is required"));
+  const conversationId = req.query.conversationId;
+  if (!conversationId) {
+    return next(createError(400, "conversationId is required"));
   }
-  const [id1, id2] = [user1.toString(), user2.toString()].sort();
-  const conversationId = `${id1}_${id2}`;
 
   const messages = await fetchChatMessages(conversationId);
 
@@ -38,7 +35,7 @@ export const createAndSendMessage = async (message) => {
 
   const savedMessage = await saveMessage(conversationId, message);
 
-  await updateConversationLastMessage(conversationId, user1, user2, savedMessage._id);
+  const conversation = await updateConversationLastMessage(conversationId, user1, user2, savedMessage._id);
 
-  return savedMessage;
+  return { message: savedMessage, conversation: conversation };
 };

@@ -18,7 +18,7 @@ export const fetchAllConversations = async (_id) => {
 };
 
 export const fetchChatMessages = async (conversationId) => {
-  return await Message.find({ conversation: conversationId }).populate("sender", "email role").sort({ createdAt: 1 });
+  return await Message.find({ conversation: conversationId }).sort({ createdAt: 1 });
 };
 
 export const saveMessage = async (conversationId, message) => {
@@ -53,5 +53,6 @@ export const updateConversationLastMessage = async (conversationId, user1, user2
   conversation.lastMessage = messageId;
   await conversation.save();
 
-  return conversation;
+  const populatedConversation = await Conversation.findById(conversation._id).populate("participants").populate("lastMessage");
+  return populatedConversation;
 };
