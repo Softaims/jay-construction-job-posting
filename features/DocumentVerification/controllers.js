@@ -39,7 +39,7 @@ export const verifyContractorDocuments = catchAsync(async (req, res, next) => {
   if (!targetUser) {
     return next(createError(404, `User did not exist`));
   }
-  if (targetUser.role != "main_contractor" || targetUser.role != "subcontractor") {
+  if (targetUser.role != "main_contractor" && targetUser.role != "subcontractor") {
     return next(createError(404, `Only main_contractors and subcontractors documents can be ${admin_status}`));
   }
   await updateAdminStatusDocumentVerification(id, targetUser.role, admin_status);

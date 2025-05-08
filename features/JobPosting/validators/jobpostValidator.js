@@ -8,6 +8,11 @@ export const jobPostValidator = z
       required_error: "job_title is required",
       invalid_type_error: "job_title must be a string",
     }),
+    job_description: z
+      .string({
+        invalid_type_error: "job_title must be a string",
+      })
+      .optional(),
 
     job_location: z.object(
       {

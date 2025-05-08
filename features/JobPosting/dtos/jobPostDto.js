@@ -4,6 +4,7 @@ export const jobPostDto = (job) => {
       _id: job._id,
       project_image: job.project_image ?? null,
       job_title: job.job_title,
+      job_description: job.job_description ?? "",
       job_location: {
         coordinates: job.job_location.coordinates,
       },
