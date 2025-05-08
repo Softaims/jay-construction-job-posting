@@ -14,6 +14,8 @@ export const userDto = (user) => {
       company_name: user.company_name,
       company_number: user.company_number,
       admin_status: user.admin_status,
+      compliance_certificate: user?.compliance_certificate ?? "",
+      verification_certificate: user?.verification_certificate ?? "",
     };
   }
 
@@ -25,6 +27,8 @@ export const userDto = (user) => {
       services_offered: user.services_offered,
       admin_status: user.admin_status,
       travel_radius_km: user.travel_radius_km,
+      compliance_certificate: user?.compliance_certificate ?? "",
+      verification_certificate: user?.verification_certificate ?? "",
     };
   }
 
