@@ -1,5 +1,5 @@
 import { jobPostDto } from "./dtos/jobPostDto.js";
-import { createAJob, fetchJobById, fetchJobs, updateJobById, deleteJobById } from "./services.js";
+import { createAJob, fetchJobById, fetchJobs, updateJobById, deleteJobById, fetchUserPostedJobs } from "./services.js";
 import { getUserById } from "../../shared/services/services.js";
 import { catchAsync } from "../../utils/catchAsync.js";
 import createError from "http-errors";
@@ -57,6 +57,12 @@ export const deleteJobPost = catchAsync(async (req, res, next) => {
   return res.status(200).json({
     message: "Job deleted successfully",
   });
+});
+
+export const getUserPostedJobs = catchAsync(async (req, res) => {
+  const { _id } = req.user;
+  const jobs = await fetchUserPostedJobs(_id);
+  res.status(200).json(jobs);
 });
 
 export const getAllJobs = catchAsync(async (req, res, next) => {

@@ -14,6 +14,10 @@ export const deleteJobById = async (id) => {
   return await Job.findByIdAndDelete(id);
 };
 
+export const fetchUserPostedJobs = async (created_by) => {
+  return await Job.find({ created_by });
+};
+
 export const fetchJobs = async (allowedTargetUsers, page, limit, latitude, longitude, distanceInKm, serviceType) => {
   const skip = (page - 1) * limit;
 
