@@ -1,6 +1,7 @@
 import express from "express";
 import { jobPostValidator } from "./validators/jobpostValidator.js";
-import { createJobPost, getAllJobs, getJobById } from "./controllers.js";
+import { updateJobValidator } from "./validators/updateJobValidator.js";
+import { createJobPost, getAllJobs, getJobById, updateJobPost, deleteJobPost } from "./controllers.js";
 import { validate } from "../../middlewares/validate.js";
 import { authMiddleware } from "../../middlewares/authMiddleware.js";
 import { authorizeMiddleware } from "../../middlewares/authorizeMiddleware.js";
@@ -103,6 +104,8 @@ const router = express.Router();
  *       - Job Postings
  */
 router.post("/post-job", authMiddleware, authorizeMiddleware("main_contractor"), validate(jobPostValidator), createJobPost);
+router.patch("/update-job/:id", authMiddleware, authorizeMiddleware("main_contractor"), validate(updateJobValidator), updateJobPost);
+router.delete("/delete-job/:id", authMiddleware, authorizeMiddleware("main_contractor"), deleteJobPost);
 
 /**
  * @swagger

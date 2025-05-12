@@ -1,5 +1,5 @@
 import { jobPostDto } from "./dtos/jobPostDto.js";
-import { createAJob, fetchJobById, fetchJobs } from "./services.js";
+import { createAJob, fetchJobById, fetchJobs, updateJobById, deleteJobById } from "./services.js";
 import { getUserById } from "../../shared/services/services.js";
 import { catchAsync } from "../../utils/catchAsync.js";
 import createError from "http-errors";
@@ -15,6 +15,47 @@ export const createJobPost = catchAsync(async (req, res, next) => {
   return res.status(201).json({
     message: "Job created successfully",
     job: jobPostDto(newJob),
+  });
+});
+
+export const updateJobPost = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+  const { _id } = req.user;
+
+  const job = await fetchJobById(id);
+  if (!job) {
+    return next(createError(404, "Job not found"));
+  }
+
+  if (job?.created_by?._id?.toString() !== _id.toString()) {
+    return next(createError(403, "Forbidden: You can only update your own job postings."));
+  }
+
+  const updatedJob = await updateJobById(id, req.body);
+
+  return res.status(200).json({
+    message: "Job updated successfully",
+    job: jobPostDto(updatedJob),
+  });
+});
+
+export const deleteJobPost = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+  const { _id } = req.user;
+
+  const job = await fetchJobById(id);
+  if (!job) {
+    return next(createError(404, "Job not found"));
+  }
+
+  if (job?.created_by?._id?.toString() !== _id.toString()) {
+    return next(createError(403, "Forbidden: You can only delete your own job postings."));
+  }
+
+  await deleteJobById(id);
+
+  return res.status(200).json({
+    message: "Job deleted successfully",
   });
 });
 

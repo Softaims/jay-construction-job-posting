@@ -1,8 +1,17 @@
 import mongoose from "mongoose";
 import { Job } from "../../shared/models/JobModel.js";
+
 export const createAJob = async (jobData) => {
   let newJob = new Job(jobData);
   return await newJob.save();
+};
+
+export const updateJobById = async (id, updateData) => {
+  return await Job.findByIdAndUpdate(id, updateData, { new: true });
+};
+
+export const deleteJobById = async (id) => {
+  return await Job.findByIdAndDelete(id);
 };
 
 export const fetchJobs = async (allowedTargetUsers, page, limit, latitude, longitude, distanceInKm, serviceType) => {
