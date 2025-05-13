@@ -21,3 +21,6 @@ export const countCandidates = async () => {
     role: { $in: ["job_seeker", "subcontractor"] },
   });
 };
+export const getTopRecentJobs = async () => {
+  return await Job.find({}).sort({ createdAt: -1 }).limit(3).populate("created_by", "company_name company_number email role");
+};
