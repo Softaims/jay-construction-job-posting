@@ -16,6 +16,7 @@ import JobPostRoutes from "./features/JobPosting/routes.js";
 import DocumentVerificationRoutes from "./features/DocumentVerification/routes.js";
 import UserRoutes from "./features/User/routes.js";
 import ChatRoutes from "./features/chat/routes.js";
+import StatisticsRoutes from "./features/statistics/routes.js";
 import SharedRoutes from "./shared/routes.js";
 
 configDotenv();
@@ -74,6 +75,7 @@ app.use("/api/v0", JobPostRoutes);
 app.use("/api/v0", DocumentVerificationRoutes);
 app.use("/api/v0", UserRoutes);
 app.use("/api/v0", ChatRoutes);
+app.use("/api/v0", StatisticsRoutes);
 app.use("/api/v0", SharedRoutes);
 
 app.use(errorHandler);
