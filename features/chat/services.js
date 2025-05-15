@@ -5,7 +5,7 @@ export const fetchAllConversations = async (_id) => {
   return await Conversation.find({
     participants: { $in: [_id] },
   })
-    .populate("participants", "email role company_name full_name")
+    .populate("participants", "email role company_name full_name description profile_picture")
     .populate({
       path: "lastMessage",
       select: "sender type content updatedAt",
