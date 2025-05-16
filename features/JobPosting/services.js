@@ -36,7 +36,11 @@ export const fetchJobs = async (allowedTargetUsers, page, limit, latitude, longi
     query["services.service_name"] = serviceType;
   }
 
-  const jobs = await Job.find(query).skip(skip).limit(limit).populate("created_by", "company_name company_number email role");
+  const jobs = await Job.find(query)
+    .sort({ createdAt: -1 })
+    .skip(skip)
+    .limit(limit)
+    .populate("created_by", "company_name company_number email role");
 
   const total = await Job.countDocuments(query);
 

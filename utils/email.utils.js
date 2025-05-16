@@ -11,12 +11,8 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
  * @returns {string} - HTML formatted email
  */
 const generateHtml = (subject, actionLink) => {
-  const heading1 = subject.includes("Verification")
-    ? "Verify your Email"
-    : "Reset Password";
-  const heading2 = subject.includes("Verification")
-    ? "to get access to dashboard"
-    : "It happens to the best of us.";
+  const heading1 = subject.includes("Verification") ? "Verify your Email" : "Reset Password";
+  const heading2 = subject.includes("Verification") ? "to get access to dashboard" : "It happens to the best of us.";
   const message = subject.includes("Verification")
     ? "Thank you for registering! Please verify your email by clicking the button below:"
     : "It looks like you requested a password reset. Click the button below to reset your password:";
@@ -171,7 +167,7 @@ text-decoration: none
 <!--<![endif]-->
 <table class=t14 role=presentation cellpadding=0 cellspacing=0 width=100% style="width:100%;"><tr><td class=t13><div class=t12 style="width:100%;text-align:center;"><div class=t11 style="display:inline-block;"><table class=t10 role=presentation cellpadding=0 cellspacing=0 align=center valign=top>
 <tr class=t9><td></td><td class=t8 width=546 valign=top>
-<table role=presentation width=100% cellpadding=0 cellspacing=0 class=t7 style="width:100%;"><tr><td class=t6 style="overflow:hidden;background-color:#64F5D6;padding:49px 50px 0 50px;border-radius:18px 18px 0 0;"><table role=presentation width=100% cellpadding=0 cellspacing=0 style="width:100% !important;"><tr><td align=left>
+<table role=presentation width=100% cellpadding=0 cellspacing=0 class=t7 style="width:100%;"><tr><td class=t6 style="overflow:hidden;background-color:#D49F2E;padding:49px 50px 0 50px;border-radius:18px 18px 0 0;"><table role=presentation width=100% cellpadding=0 cellspacing=0 style="width:100% !important;"><tr><td align=left>
 <table class=t4 role=presentation cellpadding=0 cellspacing=0 style="Margin-right:auto;"><tr>
 <!--[if mso]>
 <td width=228 class=t3 style="width:228px;">
@@ -219,10 +215,10 @@ text-decoration: none
 </td></tr><tr><td><div class=t28 style="mso-line-height-rule:exactly;mso-line-height-alt:15px;line-height:15px;font-size:1px;display:block;">&nbsp;&nbsp;</div></td></tr><tr><td align=left>
 <table class=t33 role=presentation cellpadding=0 cellspacing=0 style="Margin-right:auto;"><tr>
 <!--[if mso]>
-<td width=234 class=t32 style="background-color:#12B491;overflow:hidden;width:234px;border-radius:40px 40px 40px 40px;">
+<td width=234 class=t32 style="background-color:#D49F2E;overflow:hidden;width:234px;border-radius:40px 40px 40px 40px;">
 <![endif]-->
 <!--[if !mso]>-->
-<td class=t32 style="background-color:#12B491;overflow:hidden;width:234px;border-radius:40px 40px 40px 40px;">
+<td class=t32 style="background-color:#D49F2E;overflow:hidden;width:234px;border-radius:40px 40px 40px 40px;">
 <!--<![endif]-->
 <table class=t31 role=presentation cellpadding=0 cellspacing=0 width=100% style="width:100%;"><tr><td class=t30 style="text-align:center;line-height:44px;mso-line-height-rule:exactly;mso-text-raise:10px;padding:0 30px 0 30px;"><a class=t29 href="${actionLink}" style="display:block;margin:0;Margin:0;font-family:Albert Sans,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Arial,sans-serif;line-height:44px;font-weight:800;font-style:normal;font-size:12px;text-decoration:none;text-transform:uppercase;letter-spacing:2.4px;direction:ltr;color:#FFFFFF;text-align:center;mso-line-height-rule:exactly;mso-text-raise:10px;" target=_blank>${heading1}</a></td></tr></table>
 </td></tr></table>
@@ -264,7 +260,7 @@ text-decoration: none
 <!--[if !mso]>-->
 <td class=t65 style="width:420px;">
 <!--<![endif]-->
-<table class=t64 role=presentation cellpadding=0 cellspacing=0 width=100% style="width:100%;"><tr><td class=t63><p class=t62 style="margin:0;Margin:0;font-family:Albert Sans,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Arial,sans-serif;line-height:22px;font-weight:500;font-style:normal;font-size:12px;text-decoration:none;text-transform:none;direction:ltr;color:#888888;text-align:center;mso-line-height-rule:exactly;mso-text-raise:3px;">© 2025 Trusty Living. All Rights Reserved<br/></p></td></tr></table>
+<table class=t64 role=presentation cellpadding=0 cellspacing=0 width=100% style="width:100%;"><tr><td class=t63><p class=t62 style="margin:0;Margin:0;font-family:Albert Sans,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Arial,sans-serif;line-height:22px;font-weight:500;font-style:normal;font-size:12px;text-decoration:none;text-transform:none;direction:ltr;color:#888888;text-align:center;mso-line-height-rule:exactly;mso-text-raise:3px;">© 2025 Site-Pal. All Rights Reserved<br/></p></td></tr></table>
 </td></tr></table>
 </td></tr></table></td></tr></table>
 </td>
@@ -298,4 +294,3 @@ export const sendMail = async (to, subject, actionLink) => {
     console.error(`❌ Error sending email to ${to}:`, error);
   }
 };
-
