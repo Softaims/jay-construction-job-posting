@@ -19,7 +19,7 @@ export const createUser = catchAsync(async (req, res, next) => {
   // Generate verification token using bcrypt and expiry
   const tokenPlain = `${email}-${Date.now()}`;
   const verificationToken = await bcrypt.hash(tokenPlain, 10);
-  const verificationTokenExpiry = new Date(Date.now() + 3600000); // 1 hour expiry
+  const verificationTokenExpiry = new Date(Date.now() + 3600000); // 1 hour
 
   const userData = {
     ...req.body,
