@@ -4,16 +4,13 @@ let isConnected = false;
 const clientOptions = {
   serverApi: { version: "1", strict: true, deprecationErrors: true },
 };
- const connectDB = async () => {
+const connectDB = async () => {
   if (isConnected) {
     console.log("Using existing MongoDB connection");
     return;
   }
   try {
-    const connection = await mongoose.connect(
-      process.env.MONGO_DB_URI,
-      clientOptions
-    );
+    const connection = await mongoose.connect(process.env.MONGO_URL, clientOptions);
     isConnected = connection.connections[0].readyState;
     console.log(`MongoDB Connected: ${connection.connection.host}`);
   } catch (error) {
@@ -22,4 +19,4 @@ const clientOptions = {
   }
 };
 
-export default connectDB
+export default connectDB;
