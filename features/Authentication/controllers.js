@@ -16,7 +16,7 @@ export const createUser = catchAsync(async (req, res, next) => {
     return next(createError(409, "User with this email already exists"));
   }
   const hashedPassword = await bcrypt.hash(password, 10);
-  // Generate verification token using bcrypt and expiry
+  // Generate verification token using bcrypt
   const tokenPlain = `${email}-${Date.now()}`;
   const verificationToken = await bcrypt.hash(tokenPlain, 10);
   const verificationTokenExpiry = new Date(Date.now() + 3600000); // 1 hour
