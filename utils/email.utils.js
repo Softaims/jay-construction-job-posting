@@ -178,9 +178,6 @@ text-decoration: none
 <table class=t2 role=presentation cellpadding=0 cellspacing=0 width=100% style="width:100%;"><tr><td class=t1><div style="font-size:0px;"></div></td></tr></table>
 </td></tr></table>
 </td></tr><tr><td><div class=t5 style="mso-line-height-rule:exactly;mso-line-height-alt:54px;line-height:54px;font-size:1px;display:block;">&nbsp;&nbsp;</div></td></tr></table></td></tr></table>
-</td>
-<td></td></tr>
-</table></div></div></td></tr></table>
 </td></tr></table>
 </td></tr><tr><td align=center>
 <table class=t50 role=presentation cellpadding=0 cellspacing=0 style="Margin-left:auto;Margin-right:auto;"><tr>
@@ -233,6 +230,8 @@ text-decoration: none
 <table class=t37 role=presentation cellpadding=0 cellspacing=0 width=100% style="width:100%;"><tr><td class=t36><p class=t35 style="margin:0;Margin:0;font-family:Albert Sans,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Arial,sans-serif;line-height:22px;font-weight:500;font-style:normal;font-size:14px;text-decoration:none;text-transform:none;letter-spacing:-0.56px;direction:ltr;color:#333333;text-align:left;mso-line-height-rule:exactly;mso-text-raise:2px;">If you have any questions or need further assistance, please do not hesitate to contact our support team by replying to this email or visiting our support page.</p></td></tr></table>
 </td></tr></table>
 </td></tr></table></td></tr></table>
+</td></tr></table>
+</td></tr></table></td></tr></table>
 </td>
 <td></td></tr>
 </table></div></div></td></tr></table>
@@ -273,19 +272,90 @@ text-decoration: none
 };
 
 /**
+ * Generates HTML for chat notification email
+ * @param {string} senderName - Name of the message sender
+ * @param {string} messageContent - Content of the message
+ * @returns {string} - HTML formatted email
+ */
+const generateChatNotificationHtml = (senderName, messageContent) => {
+  return `
+<!DOCTYPE html>
+<html>
+<head>
+  <title>New Message Notification</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .container {
+      background-color: #f9f9f9;
+      border-radius: 8px;
+      padding: 20px;
+      border: 1px solid #ddd;
+    }
+    .header {
+      color: #D49F2E;
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+    .message {
+      background-color: white;
+      padding: 15px;
+      border-radius: 4px;
+      border-left: 4px solid #D49F2E;
+      margin: 20px 0;
+    }
+    .footer {
+      font-size: 12px;
+      color: #666;
+      margin-top: 20px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="header">New Message Received</h1>
+    <p>You have received a new message from <strong>${senderName}</strong>.</p>
+    <div class="message">
+      <p>${messageContent}</p>
+    </div>
+    <p>Please log in to your account to view and respond to this message.</p>
+    <div class="footer">
+      <p>© 2025 Site-Pal. All Rights Reserved</p>
+    </div>
+  </div>
+</body>
+</html>
+  `;
+};
+
+/**
  * Sends an email using SendGrid.
  * @param {string} to - Recipient email
  * @param {string} subject - Email subject
  * @param {string} actionLink - Verification or reset link
+ * @param {Object} chatData - Optional data for chat notifications
  */
-export const sendMail = async (to, subject, actionLink) => {
+export const sendMail = async (to, subject, actionLink, chatData = null) => {
   const msg = {
     to: to,
     from: process.env.SENDGRID_EMAIL,
     subject: subject,
-    text: `Click this link: ${actionLink}`,
-    html: generateHtml(subject, actionLink),
   };
+
+  if (chatData) {
+    msg.html = generateChatNotificationHtml(chatData.senderName, chatData.messageContent);
+    msg.text = `You have received a new message from ${chatData.senderName}: ${chatData.messageContent}`;
+  } else {
+    msg.text = `Click this link: ${actionLink}`;
+    msg.html = generateHtml(subject, actionLink);
+  }
 
   try {
     await sgMail.send(msg);
