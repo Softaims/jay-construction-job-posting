@@ -1,6 +1,6 @@
 import { getUserById } from "../../shared/services/services.js";
 import { userDto } from "../../shared/dtos/userDto.js";
-import { updateUser } from "./services.js";
+import { addEmailToSubscribe, isSubscribeEmailExist, updateUser } from "./services.js";
 import { catchAsync } from "../../utils/catchAsync.js";
 import { s3Uploader } from "../../utils/s3Uploader.js";
 import createError from "http-errors";
@@ -13,6 +13,25 @@ export const getMe = catchAsync(async (req, res) => {
     message: "User profile fetched successfully",
     data: userDto(user),
   });
+});
+
+export const subscribeController = catchAsync(async (req, res) => {
+  const { email } = req.body;
+  const isExist = await isSubscribeEmailExist(email);
+  if (isExist) {
+    return res.status(200).json({
+      success: true,
+      message: "You have subscribed successfully",
+      data: email,
+    });
+  } else {
+    await addEmailToSubscribe(email);
+    return res.status(200).json({
+      success: true,
+      message: "You have subscribed successfully",
+      data: email,
+    });
+  }
 });
 
 export const updateUserProfile = catchAsync(async (req, res, next) => {
