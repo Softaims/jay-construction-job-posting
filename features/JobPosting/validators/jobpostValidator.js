@@ -38,9 +38,9 @@ export const jobPostValidator = z
       }
     ),
 
-    job_type: z.enum(["part-time", "full-time"], {
-      required_error: "job_type is required (part-time or full-time)",
-      invalid_type_error: "job_type must be 'part-time' or 'full-time'",
+    job_type: z.enum(["apprentice", "graduate", "fixed", "permanent"], {
+      required_error: "job_type is required",
+      invalid_type_error: "job_type must be 'apprentice', 'graduate', 'fixed', 'permanent'",
     }),
 
     target_user: z.enum(["job_seeker", "subcontractor"], {

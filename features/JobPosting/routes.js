@@ -42,7 +42,7 @@ const router = express.Router();
  *                   - longitude
  *               job_type:
  *                 type: string
- *                 description: Type of job (e.g., full-time, part-time, etc.).
+ *                 description: Type of job (e.g., permanent,fixed, etc.).
  *               target_user:
  *                 type: string
  *                 enum: ["job_seeker", "subcontractor", "both"]

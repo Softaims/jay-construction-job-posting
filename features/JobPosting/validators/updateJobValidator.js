@@ -42,8 +42,8 @@ export const updateJobValidator = z
       .optional(),
 
     job_type: z
-      .enum(["part-time", "full-time"], {
-        invalid_type_error: "job_type must be 'part-time' or 'full-time'",
+      .enum(["apprentice", "graduate", "fixed", "permanent"], {
+        invalid_type_error: "job_type must be 'apprentice' or 'graduate' or 'fixed' or 'permanent'",
       })
       .optional(),
 
