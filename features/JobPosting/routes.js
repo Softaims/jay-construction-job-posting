@@ -103,10 +103,22 @@ const router = express.Router();
  *     tags:
  *       - Job Postings
  */
-router.post("/post-job", authMiddleware, authorizeMiddleware("main_contractor"), validate(jobPostValidator), createJobPost);
-router.patch("/update-job/:id", authMiddleware, authorizeMiddleware("main_contractor"), validate(updateJobValidator), updateJobPost);
-router.delete("/delete-job/:id", authMiddleware, authorizeMiddleware("main_contractor"), deleteJobPost);
-router.get("/user-posted-jobs", authMiddleware, authorizeMiddleware("main_contractor"), getUserPostedJobs);
+router.post(
+  "/post-job",
+  authMiddleware,
+  authorizeMiddleware("main_contractor", "subcontractor"),
+  validate(jobPostValidator),
+  createJobPost
+);
+router.patch(
+  "/update-job/:id",
+  authMiddleware,
+  authorizeMiddleware("main_contractor", "suncontractor"),
+  validate(updateJobValidator),
+  updateJobPost
+);
+router.delete("/delete-job/:id", authMiddleware, authorizeMiddleware("main_contractor", "subcontractor"), deleteJobPost);
+router.get("/user-posted-jobs", authMiddleware, authorizeMiddleware("main_contractor", "subcontractor"), getUserPostedJobs);
 
 /**
  * @swagger
