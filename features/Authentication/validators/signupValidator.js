@@ -51,6 +51,7 @@ export const signupValidator = (req, res, next) => {
 
   if (role === "main_contractor") schema = mainContractorSchema;
   else if (role === "job_seeker") schema = jobSeekerSchema;
+  else if (role === "subcontractor") schema = subcontractorSchema;
   else return res.status(400).json({ message: "Invalid role" });
 
   return validate(schema)(req, res, next);
