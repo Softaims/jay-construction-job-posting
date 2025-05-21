@@ -105,7 +105,7 @@ export const getAllJobs = catchAsync(async (req, res, next) => {
 
 export const getJobById = catchAsync(async (req, res, next) => {
   const { id } = req.params;
-  const { role } = req.user;
+  const { role, _id } = req.user;
 
   const job = await fetchJobById(id);
   if (!job) {
@@ -123,8 +123,7 @@ export const getJobById = catchAsync(async (req, res, next) => {
   } else {
     return next(createError(403, "You are not authorized to view jobs"));
   }
-
-  if (!allowedTargetUsers.includes(job.target_user)) {
+  if (!allowedTargetUsers.includes(job.target_user) && String(job.created_by?._id) !== _id) {
     return next(createError(403, "You are not authorized to view jobs"));
   }
 
