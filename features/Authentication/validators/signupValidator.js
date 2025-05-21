@@ -1,5 +1,6 @@
 import { validate } from "../../../middlewares/validate.js";
 import { z } from "zod";
+import { phoneRegex } from "../../../utils/phoneRegex.js";
 
 const baseSchema = {
   email: z.string().email({ message: "Invalid email" }),
