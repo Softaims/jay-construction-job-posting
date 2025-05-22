@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { constructionServices } from "../../../constants/constructionServices.js";
+import { jobTypes } from "../../../constants/jobTypes.js";
 export const updateJobValidator = z
   .object({
     project_image: z.string().optional(),
@@ -42,8 +43,8 @@ export const updateJobValidator = z
       .optional(),
 
     job_type: z
-      .enum(["part-time", "full-time"], {
-        invalid_type_error: "job_type must be 'part-time' or 'full-time'",
+      .enum(jobTypes, {
+        invalid_type_error: "job_type is invalid",
       })
       .optional(),
 

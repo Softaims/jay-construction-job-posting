@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { constructionServices } from "../../../constants/constructionServices.js";
+import { jobTypes } from "../../../constants/jobTypes.js";
 export const jobPostValidator = z
   .object({
     project_image: z.string().optional(),
@@ -38,9 +39,9 @@ export const jobPostValidator = z
       }
     ),
 
-    job_type: z.enum(["part-time", "full-time"], {
-      required_error: "job_type is required (part-time or full-time)",
-      invalid_type_error: "job_type must be 'part-time' or 'full-time'",
+    job_type: z.enum(jobTypes, {
+      required_error: "job_type is required",
+      invalid_type_error: "job_type is invalid",
     }),
 
     target_user: z.enum(["job_seeker", "subcontractor"], {
