@@ -19,7 +19,7 @@ export const createUser = catchAsync(async (req, res, next) => {
   // Generate verification token using bcrypt
   const tokenPlain = `${email}-${Date.now()}`;
   const verificationToken = await bcrypt.hash(tokenPlain, 10);
-  const verificationTokenExpiry = new Date(Date.now() + 3600000); // 1 hour
+  const verificationTokenExpiry = new Date(Date.now() + 600000); //10 minutes
 
   const userData = {
     ...req.body,
@@ -119,7 +119,7 @@ export const resendVerificationEmail = catchAsync(async (req, res, next) => {
   const saltRounds = 10;
   const tokenPlain = `${email}-${Date.now()}`;
   const verificationToken = await bcrypt.hash(tokenPlain, saltRounds);
-  const verificationTokenExpiry = new Date(Date.now() + 3600000); // 1 hour expiry
+  const verificationTokenExpiry = new Date(Date.now() + 600000); // 1o minutes expiry
 
   user.verificationToken = verificationToken;
   user.verificationTokenExpiry = verificationTokenExpiry;
@@ -149,7 +149,7 @@ export const loginUser = catchAsync(async (req, res, next) => {
     if (!user.verificationTokenExpiry || user.verificationTokenExpiry <= Date.now()) {
       const tokenPlain = `${email}-${Date.now()}`;
       const verificationToken = await bcrypt.hash(tokenPlain, 10);
-      const verificationTokenExpiry = new Date(Date.now() + 3600000); // 1 hour expiry
+      const verificationTokenExpiry = new Date(Date.now() + 600000); // 10 minutes expiry
 
       user.verificationToken = verificationToken;
       user.verificationTokenExpiry = verificationTokenExpiry;
@@ -200,7 +200,6 @@ export const loginUser = catchAsync(async (req, res, next) => {
 
 export const forgotPassword = catchAsync(async (req, res, next) => {
   const { email } = req.body;
-
   const user = await getUserByEmail(email.toLowerCase());
   if (!user) {
     return next(createError(404, "User not found"));
@@ -208,22 +207,18 @@ export const forgotPassword = catchAsync(async (req, res, next) => {
   if (user.resetPasswordToken && user.resetPasswordExpiry > Date.now()) {
     return next(createError(403, "Password reset email already sent. Please check your inbox"));
   }
-
   const tokenPlain = `${email}-${Date.now()}`;
   const resetPasswordToken = await bcrypt.hash(tokenPlain, 10);
   const resetPasswordExpiry = new Date(Date.now() + 3600000); // 1 hour expiry
-
   user.resetPasswordToken = resetPasswordToken;
   user.resetPasswordExpiry = resetPasswordExpiry;
   await user.save();
-
   const resetUrl = `${process.env.CLIENT_URL}/reset-password?token=${encodeURIComponent(resetPasswordToken)}&email=${encodeURIComponent(
     email
   )}`;
 
   // Send the reset email
   await sendMail(email, "Password Reset Request", resetUrl);
-
   return res.status(200).json({
     success: true,
     message: "Password reset email sent successfully.",

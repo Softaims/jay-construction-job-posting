@@ -18,9 +18,8 @@ export const fetchUserPostedJobs = async (created_by) => {
   return await Job.find({ created_by });
 };
 
-export const fetchJobs = async (allowedTargetUsers, page, limit, latitude, longitude, distanceInKm, serviceType) => {
+export const fetchJobs = async (allowedTargetUsers, page, limit, latitude, longitude, distanceInKm, serviceType, jobType) => {
   const skip = (page - 1) * limit;
-
   const query = {
     target_user: { $in: allowedTargetUsers },
   };
@@ -34,6 +33,9 @@ export const fetchJobs = async (allowedTargetUsers, page, limit, latitude, longi
   }
   if (serviceType) {
     query["services.service_name"] = serviceType;
+  }
+  if (jobType) {
+    query.job_type = jobType;
   }
 
   const jobs = await Job.find(query)
