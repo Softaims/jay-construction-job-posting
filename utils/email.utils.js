@@ -16,6 +16,7 @@ const generateHtml = (subject, actionLink) => {
   const message = subject.includes("Verification")
     ? "Thank you for registering! Please verify your email by clicking the button below:"
     : "It looks like you requested a password reset. Click the button below to reset your password:";
+  const expiryNote = "This link will expire in 10 minutes";
 
   return `
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -178,6 +179,9 @@ text-decoration: none
 <table class=t2 role=presentation cellpadding=0 cellspacing=0 width=100% style="width:100%;"><tr><td class=t1><div style="font-size:0px;"></div></td></tr></table>
 </td></tr></table>
 </td></tr><tr><td><div class=t5 style="mso-line-height-rule:exactly;mso-line-height-alt:54px;line-height:54px;font-size:1px;display:block;">&nbsp;&nbsp;</div></td></tr></table></td></tr></table>
+</td>
+<td></td></tr>
+</table></div></div></td></tr></table>
 </td></tr></table>
 </td></tr><tr><td align=center>
 <table class=t50 role=presentation cellpadding=0 cellspacing=0 style="Margin-left:auto;Margin-right:auto;"><tr>
@@ -207,7 +211,10 @@ text-decoration: none
 <!--[if !mso]>-->
 <td class=t26 style="width:563px;">
 <!--<![endif]-->
-<table class=t25 role=presentation cellpadding=0 cellspacing=0 width=100% style="width:100%;"><tr><td class=t24><p class=t23 style="margin:0;Margin:0;font-family:Albert Sans,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Arial,sans-serif;line-height:22px;font-weight:500;font-style:normal;font-size:14px;text-decoration:none;text-transform:none;letter-spacing:-0.56px;direction:ltr;color:#333333;text-align:left;mso-line-height-rule:exactly;mso-text-raise:2px;">${message}</p></td></tr></table>
+<table class=t25 role=presentation cellpadding=0 cellspacing=0 width=100% style="width:100%;">
+<tr><td class=t24><p class=t23 style="margin:0;Margin:0;font-family:Albert Sans,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Arial,sans-serif;line-height:22px;font-weight:500;font-style:normal;font-size:14px;text-decoration:none;text-transform:none;letter-spacing:-0.56px;direction:ltr;color:#333333;text-align:left;mso-line-height-rule:exactly;mso-text-raise:2px;">${message}</p></td></tr>
+<tr><td class=t24><p class=t23 style="margin:0;Margin:0;font-family:Albert Sans,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Arial,sans-serif;line-height:22px;font-weight:500;font-style:normal;font-size:14px;text-decoration:none;text-transform:none;letter-spacing:-0.56px;direction:ltr;color:#333333;text-align:left;mso-line-height-rule:exactly;mso-text-raise:2px;">${expiryNote}</p></td></tr>
+</table>
 </td></tr></table>
 </td></tr><tr><td><div class=t28 style="mso-line-height-rule:exactly;mso-line-height-alt:15px;line-height:15px;font-size:1px;display:block;">&nbsp;&nbsp;</div></td></tr><tr><td align=left>
 <table class=t33 role=presentation cellpadding=0 cellspacing=0 style="Margin-right:auto;"><tr>
@@ -228,8 +235,6 @@ text-decoration: none
 <td class=t38 style="width:563px;">
 <!--<![endif]-->
 <table class=t37 role=presentation cellpadding=0 cellspacing=0 width=100% style="width:100%;"><tr><td class=t36><p class=t35 style="margin:0;Margin:0;font-family:Albert Sans,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Arial,sans-serif;line-height:22px;font-weight:500;font-style:normal;font-size:14px;text-decoration:none;text-transform:none;letter-spacing:-0.56px;direction:ltr;color:#333333;text-align:left;mso-line-height-rule:exactly;mso-text-raise:2px;">If you have any questions or need further assistance, please do not hesitate to contact our support team by replying to this email or visiting our support page.</p></td></tr></table>
-</td></tr></table>
-</td></tr></table></td></tr></table>
 </td></tr></table>
 </td></tr></table></td></tr></table>
 </td>

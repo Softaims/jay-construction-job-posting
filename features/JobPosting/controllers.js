@@ -70,7 +70,7 @@ export const getAllJobs = catchAsync(async (req, res, next) => {
   let allowedTargetUsers = [];
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 10;
-  const { latitude, longitude, serviceType } = req.query;
+  const { latitude, longitude, serviceType, jobType } = req.query;
   let distanceInKm = req.query.distanceInKm ? Number(req.query.distanceInKm) : req.user.travelRadius;
   // if (!latitude || !longitude) {
   //   return next(createError(400, "Latitude and longitude are required."));
@@ -87,7 +87,7 @@ export const getAllJobs = catchAsync(async (req, res, next) => {
   }
 
   console.log("calling fetch job");
-  const { jobs, total } = await fetchJobs(allowedTargetUsers, page, limit, latitude, longitude, distanceInKm, serviceType);
+  const { jobs, total } = await fetchJobs(allowedTargetUsers, page, limit, latitude, longitude, distanceInKm, serviceType, jobType);
 
   return res.status(200).json({
     message: "Jobs fetched successfully",
