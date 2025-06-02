@@ -1,4 +1,4 @@
-import { createUserByRole, updateUserEmailVerificationStatus, createBlacklistedToken } from "./services.js";
+import { createUserByRole, updateUserEmailVerificationStatus, createBlacklistedToken, updateJobSeekerDocuments } from "./services.js";
 import { getUserByEmail } from "../../shared/services/services.js";
 import bcrypt from "bcrypt";
 import { sendMail } from "../../utils/email.utils.js";
@@ -31,22 +31,6 @@ export const createUser = catchAsync(async (req, res, next) => {
   if (req.body.role == "job_seeker" || req.body.role == "subcontractor") {
     userData.travel_radius_km = Number(userData.travel_radius_km);
   }
-  if (req.body.role == "job_seeker") {
-    const qualification_document = req.files.qualification_document?.[0] || null;
-    const id_document = req.files.id_document?.[0] || null;
-    const [qualification_document_result, id_document_result] = await Promise.all([
-      s3Uploader(qualification_document),
-      s3Uploader(id_document),
-    ]);
-    if (!qualification_document_result.success) {
-      return next(createError(500, `Error uploading qualification document: ${qualification_document_result.error}`));
-    }
-    if (!id_document_result.success) {
-      return next(createError(500, `Error uploading id document: ${id_document_result.error}`));
-    }
-    userData.qualification_document = qualification_document_result.url;
-    userData.id_document = id_document_result.url;
-  }
 
   const newUser = await createUserByRole(role, userData);
 
@@ -59,6 +43,30 @@ export const createUser = catchAsync(async (req, res, next) => {
     success: true,
     message: "User registered successfully. Please verify your email.",
     data: userDto(newUser),
+  });
+});
+
+export const submitJobseekerDocuments = catchAsync(async (req, res, next) => {
+  const { _id } = req.user;
+  console.log("hello");
+  const qualification_document = req.files.qualification_document?.[0] || null;
+  const id_document = req.files.id_document?.[0] || null;
+  const [qualification_document_result, id_document_result] = await Promise.all([
+    s3Uploader(qualification_document),
+    s3Uploader(id_document),
+  ]);
+  if (!qualification_document_result.success) {
+    return next(createError(500, `Error uploading qualification document: ${qualification_document_result.error}`));
+  }
+  if (!id_document_result.success) {
+    return next(createError(500, `Error uploading id document: ${id_document_result.error}`));
+  }
+  const updatedUser = await updateJobSeekerDocuments(_id, qualification_document_result.url, id_document_result.url);
+
+  return res.status(201).json({
+    success: true,
+    message: "Jobseeker documents updated successfully",
+    data: userDto(updatedUser),
   });
 });
 

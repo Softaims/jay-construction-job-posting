@@ -18,7 +18,6 @@ export const createUserByRole = async (role, userData) => {
   return await newUser.save();
 };
 
-
 export const updateUserEmailVerificationStatus = async (userId) => {
   return User.findByIdAndUpdate(
     userId,
@@ -31,7 +30,18 @@ export const updateUserEmailVerificationStatus = async (userId) => {
   );
 };
 
-export const createBlacklistedToken = async (token,expiresAt) => {
-    const newToken = new BlacklistedToken({ token,expiresAt });
-    return await newToken.save();
+export const createBlacklistedToken = async (token, expiresAt) => {
+  const newToken = new BlacklistedToken({ token, expiresAt });
+  return await newToken.save();
+};
+
+export const updateJobSeekerDocuments = async (userId, qualificationUrl, idUrl) => {
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new Error("User not found");
+  }
+  user.qualification_document = qualificationUrl;
+  user.id_document = idUrl;
+  await user.save();
+  return user;
 };

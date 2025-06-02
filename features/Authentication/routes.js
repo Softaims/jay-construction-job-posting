@@ -9,6 +9,7 @@ import {
   resetPassword,
   logoutUser,
   checkEmail,
+  submitJobseekerDocuments,
 } from "./controllers.js";
 import { signupValidator } from "./validators/signupValidator.js";
 import { validate } from "../../middlewares/validate.js";
@@ -20,6 +21,8 @@ import { resetPasswordValidator } from "./validators/resetPasswordValidator.js";
 import { upload } from "../../utils/multer.js";
 import { validateDocuments } from "./validators/validateDocuments.js";
 import { checkEmailValidator } from "./validators/checkEmailValidator.js";
+import { authMiddleware } from "../../middlewares/authMiddleware.js";
+import { authorizeMiddleware } from "../../middlewares/authorizeMiddleware.js";
 /**
  * @swagger
  * /register:
@@ -46,12 +49,15 @@ import { checkEmailValidator } from "./validators/checkEmailValidator.js";
  *         description: User with this email already exists.
  */
 
+router.post("/register", signupValidator, createUser);
+
 router.post(
-  "/register",
+  "/submit-jobseeker-documents",
+  authMiddleware,
+  authorizeMiddleware("job_seeker"),
   upload.fields([{ name: "qualification_document" }, { name: "id_document" }]),
   validateDocuments,
-  signupValidator,
-  createUser
+  submitJobseekerDocuments
 );
 router.post("/check-email", validate(checkEmailValidator), checkEmail);
 router.post("/verify-email", validate(emailVerificationValidator), verifyEmail);
